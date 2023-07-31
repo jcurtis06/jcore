@@ -9,4 +9,8 @@ abstract class Component {
     abstract fun update(delta: Float)
 
     abstract fun init()
+
+    open fun postInit() {
+
+    }
 }

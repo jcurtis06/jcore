@@ -36,12 +36,21 @@ abstract class ModuleCore: ApplicationAdapter() {
         init()
         preInit()
         modules.forEach { m -> m.init() }
-        Core.objects.forEach { it.init() }
         postInit()
+        modules.forEach { m -> m.postInit() }
     }
 
     override fun render() {
         modules.forEach { m -> m.update() }
+
+        if (Core.objectsToAdd.isNotEmpty()) {
+            println("adding ${Core.objectsToAdd.size} objects")
+            Core.objects.addAll(Core.objectsToAdd)
+            Core.objectsToAdd.clear()
+
+            Core.objects.forEach { it.init() }
+        }
+
         update()
     }
 

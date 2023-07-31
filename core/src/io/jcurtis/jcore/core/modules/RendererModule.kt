@@ -21,9 +21,18 @@ abstract class RendererModule: Module() {
 
     var fboCamera: OrthographicCamera? = null
 
-    var camera: OrthographicCamera? = null
+    var camera: OrthographicCamera = Core.camera
 
     var viewport: Viewport? = null
+
+    override fun init() {
+        if (Core.objectsToAdd.isNotEmpty()) {
+            println("adding ${Core.objectsToAdd.size} objects")
+            Core.objects.addAll(Core.objectsToAdd)
+            Core.objectsToAdd.clear()
+            Core.objects.forEach { it.init() }
+        }
+    }
 
     override fun preInit() {
         batch = SpriteBatch()
@@ -31,7 +40,7 @@ abstract class RendererModule: Module() {
         // Create both cameras
         fboCamera = OrthographicCamera()
         camera = OrthographicCamera()
-        camera!!.setToOrtho(false, VIRTUAL_WIDTH.toFloat(), VIRTUAL_HEIGHT.toFloat())
+        camera.setToOrtho(false, VIRTUAL_WIDTH.toFloat(), VIRTUAL_HEIGHT.toFloat())
 
         // Create the viewport
         viewport = FitViewport(VIRTUAL_WIDTH.toFloat(), VIRTUAL_HEIGHT.toFloat(), fboCamera)
@@ -42,10 +51,17 @@ abstract class RendererModule: Module() {
         frameBuffer!!.colorBufferTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
     }
 
+    override fun postInit() {
+        println("reached")
+        Core.objects.forEach { it.postInit() }
+    }
+
     fun drawDefault() {
         Core.objects.forEach { it.update(Gdx.graphics.deltaTime) }
 
-        camera!!.update()
+        camera.update()
+
+        Core.renderables.forEach { it.setView(camera) }
 
         // Start rendering to the FrameBuffer
         frameBuffer!!.begin()
@@ -55,7 +71,7 @@ abstract class RendererModule: Module() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         // Set the projection matrix to the camera's combined matrix
-        batch!!.projectionMatrix = camera!!.combined
+        batch!!.projectionMatrix = camera.combined
 
         // Begin the batch
         batch!!.begin()
@@ -63,7 +79,7 @@ abstract class RendererModule: Module() {
         // Thus making it pixel-perfect
 
         Core.images.forEach { it.draw(batch!!) }
-
+        Core.renderables.forEach { it.render(batch!!) }
 
         // End the batch
         batch!!.end()

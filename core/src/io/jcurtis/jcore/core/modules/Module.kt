@@ -16,6 +16,10 @@ open class Module: InputAdapter() {
 
     }
 
+    open fun postInit() {
+
+    }
+
     open fun pause() {
 
     }

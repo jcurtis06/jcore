@@ -2,6 +2,7 @@ package io.jcurtis.jcore.test
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.Image
@@ -11,6 +12,10 @@ class PlayerController : Component() {
 
     override fun init() {
         image = gameObject.getComponent<Image>()
+    }
+
+    override fun postInit() {
+        println("postinit player")
     }
 
     override fun update(delta: Float) {
