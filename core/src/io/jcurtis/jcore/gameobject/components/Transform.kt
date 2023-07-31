@@ -1,10 +1,9 @@
 package io.jcurtis.jcore.gameobject.components
 
 import com.badlogic.gdx.math.Vector2
-import io.jcurtis.jcore.gameobject.GameObject
 import kotlin.math.roundToInt
 
-class Transform(gameObject: GameObject) : Component(gameObject) {
+class Transform : Component() {
     var position = Vector2()
 
     var x = position.x

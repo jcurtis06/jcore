@@ -36,6 +36,7 @@ abstract class ModuleCore: ApplicationAdapter() {
         init()
         preInit()
         modules.forEach { m -> m.init() }
+        Core.objects.forEach { it.init() }
         postInit()
     }
 
