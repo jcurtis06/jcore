@@ -20,8 +20,13 @@ abstract class RendererModule: Module() {
     private var viewport = FitViewport(Graphics.size().x, Graphics.size().y, surfaceCamera)
     private var pixelPerfect = PixelPerfect(resolution.x.toInt(), resolution.y.toInt())
 
+    override fun init() {
+        Core.objects.forEach { obj -> obj.init() }
+    }
+
     private fun drawDefault() {
         Core.camera.update()
+        Core.objects.forEach { obj -> obj.update(Graphics.delta()) }
 
         pixelPerfect.begin()
 
@@ -33,6 +38,7 @@ abstract class RendererModule: Module() {
         Core.batch.begin()
 
         draw()
+        Core.images.forEach { image -> image.draw(Core.batch) }
 
         Core.batch.end()
         pixelPerfect.end()
