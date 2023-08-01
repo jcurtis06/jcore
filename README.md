@@ -1,7 +1,7 @@
 # jcore
 
 <p align="center">
-    <img src="jcorelogo.png" alt="jcore logo">
+    <img src="assets/jcorelogo.png" alt="jcore logo">
 </p>
 
 ## 2D cross-platform game library 
