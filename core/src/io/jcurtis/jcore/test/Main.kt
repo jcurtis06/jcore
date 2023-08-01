@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import io.jcurtis.jcore.core.Core
-import io.jcurtis.jcore.core.modules.RendererModule
+import io.jcurtis.jcore.core.JCoreGame
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.*
 
-class Main: RendererModule() {
+class Main: JCoreGame() {
     private val player: GameObject = GameObject()
     private val map: GameObject = GameObject()
 

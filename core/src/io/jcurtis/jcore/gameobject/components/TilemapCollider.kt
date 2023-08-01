@@ -11,7 +11,7 @@ class TilemapCollider: Component() {
     }
 
     override fun postInit() {
-        println("it works")
+        println("tilemap collider post init")
         tilemap = gameObject.getComponent<Tilemap>()
 
         if (tilemap == null) {

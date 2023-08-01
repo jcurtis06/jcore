@@ -19,7 +19,6 @@ class Rigidbody: Component() {
 
         Core.colliders.forEach { c ->
             if (c.rectangle.overlaps(collider!!.rectangle)) {
-                println("overlapping")
             }
         }
     }
