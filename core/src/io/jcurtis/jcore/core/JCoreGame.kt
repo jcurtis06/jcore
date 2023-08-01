@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import space.earlygrey.shapedrawer.ShapeDrawer
+import kotlin.math.roundToInt
 
 open class JCoreGame: ApplicationAdapter() {
     val resWidth = 320
@@ -72,6 +73,11 @@ open class JCoreGame: ApplicationAdapter() {
         }
 
         Core.objects.forEach {
+            it.transform!!.position.set(
+                it.transform!!.position.x.roundToInt().toFloat(),
+                it.transform!!.position.y.roundToInt().toFloat()
+            )
+            print(it.transform!!.position)
             it.update(Gdx.graphics.deltaTime)
         }
 
