@@ -10,6 +10,9 @@ import io.jcurtis.jcore.gameobject.GameObject
 class TilemapCollider: Component() {
     private lateinit var tilemap: Tilemap
 
+    var tileLayer = 0
+    var collisionTag = "collision"
+
     override fun init() {
         try {
             tilemap = gameObject.getComponent()!!
@@ -20,7 +23,7 @@ class TilemapCollider: Component() {
 
     override fun postInit() {
         // Try to retrieve the collision layer from the tilemap, if it doesn't exist, throw an exception
-        val collisionLayer = tilemap.map.layers.get("collision") as TiledMapTileLayer?
+        val collisionLayer = tilemap.map.layers.get(collisionTag) as TiledMapTileLayer?
                 ?: throw Exception("TilemapCollider requires a collision layer")
 
         // Create a 2D array (grid) to keep track of the tiles that have been explored
@@ -48,12 +51,13 @@ class TilemapCollider: Component() {
             // Create a new game object
             val gameObject = GameObject()
             // Set its x and y position according to the collider
-            gameObject.transform!!.position.x = collider.x * 16f
-            gameObject.transform!!.position.y = collider.y * 16f
+            gameObject.transform.position.x = collider.x * 16f
+            gameObject.transform.position.y = collider.y * 16f
             // Attach a BoxCollider to the game object and set its width and height
             gameObject.attach<BoxCollider>().apply {
                 width = collider.width * 16f
                 height = collider.height * 16f
+                layer = tileLayer
             }
         }
     }
