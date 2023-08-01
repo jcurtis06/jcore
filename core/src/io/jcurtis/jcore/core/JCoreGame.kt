@@ -71,7 +71,9 @@ open class JCoreGame: ApplicationAdapter() {
             Core.objects.forEach { it.init() }
         }
 
-        Core.objects.forEach { it.update(Gdx.graphics.deltaTime) }
+        Core.objects.forEach {
+            it.update(Gdx.graphics.deltaTime)
+        }
 
         gameCamera!!.update()
         Core.renderables.forEach { it.setView(gameCamera!!) }
@@ -86,6 +88,16 @@ open class JCoreGame: ApplicationAdapter() {
 
         Core.images.forEach { it.draw(batch!!) }
         Core.renderables.forEach { it.render(batch!!) }
+        Core.objects.forEach {
+            debugRenderer!!.setColor(0f, 1f, 0f, 1f)
+
+            debugRenderer!!.rectangle(
+                it.transform!!.position.x,
+                it.transform!!.position.y,
+                1f,
+                1f
+            )
+        }
 
         if (showCollisionBoxes) {
             Core.colliders.forEach {

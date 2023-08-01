@@ -32,8 +32,8 @@ class TilemapCollider: Component() {
                         continue
 
                     val obj = GameObject()
-                    obj.transform?.x = x*16f
-                    obj.transform?.y = y*16f
+                    obj.transform!!.position.x = x*16f
+                    obj.transform!!.position.y = y*16f
                     obj.attach<BoxCollider>().apply {
                         width = 16f
                         height = 16f
