@@ -86,6 +86,8 @@ class RigidBody: Component() {
         collider.rectangle.x = position.x
         collider.rectangle.y = position.y
 
-        return Core.colliders.filter { it.rectangle != collider.rectangle && it.rectangle.overlaps(collider.rectangle) }
+        return Core.colliders.filter { it.rectangle != collider.rectangle &&
+                                        it.layer == collider.layer &&
+                                        it.rectangle.overlaps(collider.rectangle) }
     }
 }
