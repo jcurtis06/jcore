@@ -59,11 +59,6 @@ class RigidBody: Component() {
             velocity.y = 0f
         }
 
-        println("""
-            x: ${collidesX.isNotEmpty()}
-            y: ${collidesY.isNotEmpty()}
-        """)
-
         transform.position.add(velocity)
     }
 
