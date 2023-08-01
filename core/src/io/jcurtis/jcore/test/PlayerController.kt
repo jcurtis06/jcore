@@ -2,10 +2,10 @@ package io.jcurtis.jcore.test
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import io.jcurtis.jcore.gameobject.components.BoxCollider
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.RigidBody
 
-@Suppress("SpellCheckingInspection")
 class PlayerController : Component() {
     private var speed = 100
     private var rigidbody: RigidBody? = null

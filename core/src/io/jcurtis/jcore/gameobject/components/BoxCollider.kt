@@ -28,14 +28,12 @@ class BoxCollider: Component() {
     private var collisions = mutableListOf<BoxCollider>()
     private var newCollisions = mutableListOf<BoxCollider>()
 
-    init {
-        Core.colliders.add(this)
+    override fun init() {
+        rectangle.setPosition(transform.position)
         rectangle.width = width
         rectangle.height = height
-    }
 
-    override fun init() {
-        return
+        Core.colliders.add(this)
     }
 
     fun getTop(): Float {

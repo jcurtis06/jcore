@@ -24,6 +24,7 @@ class RigidBody: Component() {
         var collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
 
         if (collidesX.isNotEmpty()) {
+            println("player colliding")
             val box = collidesX[0]
             if (velocity.x > 0)
                 transform.position.x = box.getLeft() - collider.width
@@ -33,6 +34,7 @@ class RigidBody: Component() {
         }
 
         if (collidesY.isNotEmpty()) {
+            println("player colliding")
             val box = collidesY[0]
             if (velocity.y > 0)
                 // up
@@ -44,6 +46,7 @@ class RigidBody: Component() {
         }
 
         if (collidesXY.isNotEmpty() && collidesX.isEmpty() && collidesY.isEmpty()) {
+            println("player colliding")
             val box = collidesXY[0]
             if (velocity.x > 0)
                 transform.position.x = box.getLeft() - collider.width
@@ -66,6 +69,6 @@ class RigidBody: Component() {
         collider.rectangle.x = position.x
         collider.rectangle.y = position.y
 
-        return Core.colliders.filter { c -> (c.rectangle.overlaps(collider.rectangle) && c != collider) }
+        return Core.colliders.filter { it.rectangle != collider.rectangle && it.rectangle.overlaps(collider.rectangle) }
     }
 }
