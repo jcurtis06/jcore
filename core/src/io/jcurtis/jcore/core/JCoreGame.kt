@@ -2,14 +2,14 @@ package io.jcurtis.jcore.core
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
+import space.earlygrey.shapedrawer.ShapeDrawer
 
 open class JCoreGame: ApplicationAdapter() {
     val resWidth = 320
@@ -20,6 +20,10 @@ open class JCoreGame: ApplicationAdapter() {
     var viewCamera: OrthographicCamera? = null
     var gameCamera: OrthographicCamera? = null
     var viewport: Viewport? = null
+
+    var showCollisionBoxes = true
+
+    var debugRenderer: ShapeDrawer? = null
 
     private var firstFrame = true
 
@@ -36,6 +40,7 @@ open class JCoreGame: ApplicationAdapter() {
         pixelPerfectBuffer = FrameBuffer(Pixmap.Format.RGB888, resWidth, resHeight, false)
         pixelPerfectBuffer!!.colorBufferTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
 
+        debugRenderer = ShapeDrawer(batch, TextureRegion(Texture(Gdx.files.internal("pixel.png"))))
 
         init()
 
@@ -81,6 +86,20 @@ open class JCoreGame: ApplicationAdapter() {
 
         Core.images.forEach { it.draw(batch!!) }
         Core.renderables.forEach { it.render(batch!!) }
+
+        if (showCollisionBoxes) {
+            Core.colliders.forEach {
+                debugRenderer!!.setColor(0f, 0f, 1f, 0.2f)
+                debugRenderer!!.rectangle(
+                    it.rectangle
+                )
+
+                debugRenderer!!.setColor(1f, 0f, 0f, 0.5f)
+                debugRenderer!!.filledRectangle(
+                    it.rectangle
+                )
+            }
+        }
 
         batch!!.end()
         pixelPerfectBuffer!!.end()
