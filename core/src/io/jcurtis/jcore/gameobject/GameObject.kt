@@ -15,11 +15,10 @@ class GameObject {
     val components = mutableListOf<Component>()
 
     /** Transform is the only Component that is attached to GameObject */
-    var transform: Transform? = null
+    var transform: Transform
 
     /** Attach the Transform to this GameObject when created */
     init {
-        println("Me run!")
         transform = attach<Transform>()
         Core.objectsToAdd.add(this)
     }

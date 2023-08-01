@@ -73,11 +73,10 @@ open class JCoreGame: ApplicationAdapter() {
         }
 
         Core.objects.forEach {
-            it.transform!!.position.set(
-                it.transform!!.position.x.roundToInt().toFloat(),
-                it.transform!!.position.y.roundToInt().toFloat()
+            it.transform.position.set(
+                it.transform.position.x.roundToInt().toFloat(),
+                it.transform.position.y.roundToInt().toFloat()
             )
-            print(it.transform!!.position)
             it.update(Gdx.graphics.deltaTime)
         }
 
@@ -98,8 +97,8 @@ open class JCoreGame: ApplicationAdapter() {
             debugRenderer!!.setColor(0f, 1f, 0f, 1f)
 
             debugRenderer!!.rectangle(
-                it.transform!!.position.x,
-                it.transform!!.position.y,
+                it.transform.position.x,
+                it.transform.position.y,
                 1f,
                 1f
             )
