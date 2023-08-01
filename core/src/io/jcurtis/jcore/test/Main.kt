@@ -27,9 +27,11 @@ class Main: JCoreGame() {
         player.attach<PlayerController>()
         player.attach<Image>().setTexture(Core.assets.get("slime.png", Texture::class.java))
         player.attach<BoxCollider>().apply {
-            width = 16f
-            height = 16f
+            width = 14f
+            height = 12f
         }
-        player.attach<Rigidbody>()
+        player.attach<RigidBody>()
+
+        player.transform!!.position.setZero()
     }
 }

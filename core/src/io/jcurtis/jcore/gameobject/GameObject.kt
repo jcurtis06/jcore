@@ -19,6 +19,7 @@ class GameObject {
 
     /** Attach the Transform to this GameObject when created */
     init {
+        println("Me run!")
         transform = attach<Transform>()
         Core.objectsToAdd.add(this)
     }

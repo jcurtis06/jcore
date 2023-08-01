@@ -2,37 +2,39 @@ package io.jcurtis.jcore.test
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
-import io.jcurtis.jcore.core.Core
-import io.jcurtis.jcore.gameobject.GameObject
-import io.jcurtis.jcore.gameobject.components.BoxCollider
 import io.jcurtis.jcore.gameobject.components.Component
-import io.jcurtis.jcore.gameobject.components.Image
-import io.jcurtis.jcore.gameobject.components.Rigidbody
+import io.jcurtis.jcore.gameobject.components.RigidBody
 
+@Suppress("SpellCheckingInspection")
 class PlayerController : Component() {
-    private var rigidbody: Rigidbody? = null
+    private var speed = 900
+    private var rigidbody: RigidBody? = null
 
     override fun init() {
-        rigidbody = gameObject.getComponent<Rigidbody>()
+        rigidbody = gameObject.getComponent<RigidBody>()
     }
 
     override fun update(delta: Float) {
         val velocity = rigidbody!!.velocity
 
         if (Gdx.input.isKeyPressed(Keys.D)) {
-            velocity.x += 1f
+            velocity.x += speed * delta
         }
 
         if (Gdx.input.isKeyPressed(Keys.A)) {
-            velocity.x -= 1f
+            velocity.x -= speed * delta
         }
 
         if (Gdx.input.isKeyPressed(Keys.W)) {
-            velocity.y += 1f
+            velocity.y += speed * delta
         }
 
         if (Gdx.input.isKeyPressed(Keys.S)) {
-            velocity.y -= 1f
+            velocity.y -= speed * delta
+        }
+
+        if (Gdx.input.isKeyPressed(Keys.Q)) {
+            transform.position.setZero()
         }
 
         rigidbody?.moveAndSlide(velocity)

@@ -2,7 +2,7 @@ package io.jcurtis.jcore.gameobject.components
 
 import io.jcurtis.jcore.gameobject.GameObject
 
-abstract class Component {
+abstract class Component() {
     lateinit var transform: Transform
     lateinit var gameObject: GameObject
 
