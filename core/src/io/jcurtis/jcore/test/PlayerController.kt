@@ -37,7 +37,7 @@ class PlayerController : Component() {
             transform.position.setZero()
         }
 
-        rigidbody?.moveAndSlide(velocity)
+        rigidbody?.moveAndSlide()
         velocity.set(0f, 0f)
     }
 }

@@ -18,13 +18,12 @@ class RigidBody: Component() {
         collider = gameObject.getComponent<BoxCollider>()!!
     }
 
-    fun moveAndSlide(velocity: Vector2) {
+    fun moveAndSlide() {
         val collidesX = checkCollisionsAt(transform.position.cpy().add(velocity.x, 0f))
         val collidesY = checkCollisionsAt(transform.position.cpy().add(0f, velocity.y))
-        var collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
+        val collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
 
         if (collidesX.isNotEmpty()) {
-            println("player colliding")
             val box = collidesX[0]
             if (velocity.x > 0)
                 transform.position.x = box.getLeft() - collider.width
@@ -34,7 +33,6 @@ class RigidBody: Component() {
         }
 
         if (collidesY.isNotEmpty()) {
-            println("player colliding")
             val box = collidesY[0]
             if (velocity.y > 0)
                 // up
@@ -46,17 +44,14 @@ class RigidBody: Component() {
         }
 
         if (collidesXY.isNotEmpty() && collidesX.isEmpty() && collidesY.isEmpty()) {
-            println("player colliding")
             val box = collidesXY[0]
             if (velocity.x > 0)
                 transform.position.x = box.getLeft() - collider.width
             else
                 transform.position.x = box.getRight()
             if (velocity.y > 0)
-            // up
                 transform.position.y = box.getBottom() - collider.height
             else
-            // down
                 transform.position.y = box.getTop()
             velocity.x = 0f
             velocity.y = 0f
