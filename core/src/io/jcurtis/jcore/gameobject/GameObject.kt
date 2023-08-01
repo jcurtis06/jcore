@@ -3,6 +3,7 @@ package io.jcurtis.jcore.gameobject
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.Transform
+import io.jcurtis.jcore.graphics.Renderable
 
 /**
  * GameObject is the base class for all objects in the game.
@@ -19,7 +20,7 @@ class GameObject {
     /** Attach the Transform to this GameObject when created */
     init {
         transform = attach<Transform>()
-        Core.objects.add(this)
+        Core.objectsToAdd.add(this)
     }
 
     /** Update all the components attached to the GameObject */
@@ -29,7 +30,13 @@ class GameObject {
 
     /** Initialize all the components attached to the GameObject */
     fun init() {
+        println("init")
         components.forEach { it.init() }
+    }
+
+    fun postInit() {
+        println("post init")
+        components.forEach { it.postInit() }
     }
 
     /**
@@ -45,6 +52,8 @@ class GameObject {
         if (transform == null) println("Transform is null! Component will not be mounted.").also { return component }
         component.gameObject = this
         if (component !is Transform) component.transform = transform!!
+
+        if (component is Renderable) Core.renderables.add(component)
 
         components.add(component)
         return component

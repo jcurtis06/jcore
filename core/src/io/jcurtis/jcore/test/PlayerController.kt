@@ -2,15 +2,19 @@ package io.jcurtis.jcore.test
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.GameObject
+import io.jcurtis.jcore.gameobject.components.BoxCollider
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.Image
 
 class PlayerController : Component() {
     private var image: Image? = null
+    private var collider: BoxCollider? = null
 
     override fun init() {
         image = gameObject.getComponent<Image>()
+        collider = gameObject.getComponent<BoxCollider>()
     }
 
     override fun update(delta: Float) {
