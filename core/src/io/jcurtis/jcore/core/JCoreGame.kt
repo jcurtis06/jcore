@@ -77,7 +77,6 @@ open class JCoreGame: ApplicationAdapter() {
                 it.transform!!.position.x.roundToInt().toFloat(),
                 it.transform!!.position.y.roundToInt().toFloat()
             )
-            print(it.transform!!.position)
             it.update(Gdx.graphics.deltaTime)
         }
 
