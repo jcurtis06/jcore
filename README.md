@@ -1,6 +1,8 @@
 # jcore
-<p style="display: flex; flex-direction: column; align-items: center">
+<p align="center">
     <img src="assets/jcore_logo.png" alt="jcore logo">
+</p>
+<p align="center">
     <a href="https://jitpack.io/#jcurtis06/jcore">
         <img src="https://jitpack.io/v/jcurtis06/jcore.svg" alt="jitpack">
     </a>
