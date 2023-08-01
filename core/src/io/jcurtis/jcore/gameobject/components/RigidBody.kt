@@ -34,10 +34,9 @@ class RigidBody: Component() {
 
         val collidesX = checkCollisionsAt(transform.position.cpy().add(velocity.x, 0f))
         val collidesY = checkCollisionsAt(transform.position.cpy().add(0f, velocity.y))
-        var collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
+        val collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
 
         if (collidesX.isNotEmpty()) {
-            println("player colliding")
             val box = collidesX[0]
             if (velocity.x > 0) {
                 transform.position.x = box.getLeft() - collider.width
