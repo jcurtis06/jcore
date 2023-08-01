@@ -7,7 +7,7 @@ import io.jcurtis.jcore.gameobject.components.RigidBody
 
 @Suppress("SpellCheckingInspection")
 class PlayerController : Component() {
-    private var speed = 900
+    private var speed = 100
     private var rigidbody: RigidBody? = null
 
     override fun init() {
