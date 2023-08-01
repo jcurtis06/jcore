@@ -4,6 +4,20 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
 import io.jcurtis.jcore.gameobject.GameObject
 
+/*
+This code is for a TilemapCollider class, which is a type of Component in a game engine. The purpose of this class is to handle the creation and management of colliders in a tile-based game map. Here's a high-level overview of what the code is doing:
+
+Initialization: The TilemapCollider has an initialization function init() which currently does nothing.
+Post-initialization: In the postInit() function, it fetches the Tilemap component from the game object and checks whether it exists. If it doesn't, it throws an exception.
+Collision layer extraction: It retrieves a layer named "collision" from the Tilemap. If such a layer does not exist, it throws an exception. This collision layer represents areas in the game map where collision should be checked.
+Exploration of the collision layer: It creates a two-dimensional boolean array, exploredTiles, to track which tiles have been explored. It then iterates over each tile in the collision layer. If a tile hasn't been explored, it calls the explore() function to potentially find a contiguous collider, which is represented as a Rectangle. Any found colliders are added to a list.
+Creation of game objects for each collider: After all tiles have been explored, it iterates through each collider in the list. For each collider, it creates a GameObject and sets its position according to the collider. It then attaches a BoxCollider to the GameObject, setting its width and height according to the collider's dimensions.
+Auxiliary functions: It has several helper functions, such as isExplored() to check if a tile has been explored or if it is a valid tile, markRowAsExplored() to mark all tiles in a row as explored, and explore() to explore tiles starting from a given position and potentially find a contiguous collider.
+Update function: The update() function, which currently does nothing, would typically be used to update the component's state during each game loop.
+In summary, this code seems to be part of a game engine handling tile-based maps. It's primarily concerned with managing collision detection by creating colliders for each contiguous group of collidable tiles in a tilemap.
+ */
+
+
 class TilemapCollider: Component() {
     private var tilemap: Tilemap? = null
 
