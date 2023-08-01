@@ -32,6 +32,5 @@ class Main: JCoreGame() {
         }
         player.attach<RigidBody>()
 
-        player.transform!!.position.setZero()
     }
 }
