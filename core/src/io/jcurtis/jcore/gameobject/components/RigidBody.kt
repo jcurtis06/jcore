@@ -8,8 +8,15 @@ class RigidBody: Component() {
 
     private lateinit var collider: BoxCollider
 
-    private var isOnFloor = false
-    private var isOnWall = Pair(false, false)
+    class CollidingDirection {
+        var down = false
+        var up = false
+        var left = false
+        var right = false
+        var none = true
+    }
+
+    val collidingDirection = CollidingDirection()
 
     override fun update(delta: Float) {
     }
@@ -19,6 +26,12 @@ class RigidBody: Component() {
     }
 
     fun moveAndSlide(velocity: Vector2) {
+        collidingDirection.down = false
+        collidingDirection.up = false
+        collidingDirection.left = false
+        collidingDirection.right = false
+        collidingDirection.none = true
+
         val collidesX = checkCollisionsAt(transform.position.cpy().add(velocity.x, 0f))
         val collidesY = checkCollisionsAt(transform.position.cpy().add(0f, velocity.y))
         var collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
@@ -26,41 +39,45 @@ class RigidBody: Component() {
         if (collidesX.isNotEmpty()) {
             println("player colliding")
             val box = collidesX[0]
-            if (velocity.x > 0)
+            if (velocity.x > 0) {
                 transform.position.x = box.getLeft() - collider.width
-            else
+                collidingDirection.right = true
+            }
+            else {
                 transform.position.x = box.getRight()
+                collidingDirection.left = true
+            }
             velocity.x = 0f
         }
 
         if (collidesY.isNotEmpty()) {
-            println("player colliding")
             val box = collidesY[0]
-            if (velocity.y > 0)
-                // up
+            if (velocity.y > 0) {
                 transform.position.y = box.getBottom() - collider.height
-            else
-                // down
+                collidingDirection.up = true
+            }
+            else {
                 transform.position.y = box.getTop()
+                collidingDirection.down = true
+            }
             velocity.y = 0f
         }
 
         if (collidesXY.isNotEmpty() && collidesX.isEmpty() && collidesY.isEmpty()) {
-            println("player colliding")
             val box = collidesXY[0]
             if (velocity.x > 0)
                 transform.position.x = box.getLeft() - collider.width
             else
                 transform.position.x = box.getRight()
             if (velocity.y > 0)
-            // up
                 transform.position.y = box.getBottom() - collider.height
             else
-            // down
                 transform.position.y = box.getTop()
             velocity.x = 0f
             velocity.y = 0f
         }
+
+        collidingDirection.none = !(collidingDirection.down || collidingDirection.up || collidingDirection.left || collidingDirection.right)
 
         transform.position.add(velocity)
     }
