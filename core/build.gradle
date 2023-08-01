@@ -1,3 +1,23 @@
+apply plugin: "kotlin"
+apply plugin: 'maven-publish'
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.jcurtis'
+            artifactId = 'jcore'
+            version = '1.0.0'
+
+            from components["java"]
+        }
+    }
+}
+
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -8,3 +28,5 @@ eclipse.project.name = appName + "-core"
 dependencies {
     implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
 }
+
+
