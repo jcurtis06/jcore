@@ -1,7 +1,9 @@
 # jcore
-
-<p align="center">
-    <img src="assets/jcorelogo.png" alt="jcore logo">
+<p style="display: flex; flex-direction: column; align-items: center">
+    <img src="assets/jcore_logo.png" alt="jcore logo">
+    <a href="https://jitpack.io/#jcurtis06/jcore">
+        <img src="https://jitpack.io/v/jcurtis06/jcore.svg" alt="jitpack">
+    </a>
 </p>
 
 ## 2D cross-platform game library 
@@ -14,7 +16,6 @@ Using jcore in your project is easy.
 ```groovy
 allprojects {
     repositories {
-        ...
         maven { url 'https://jitpack.io' }
     }
 }
