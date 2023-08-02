@@ -19,7 +19,6 @@ open class JCoreGame: ApplicationAdapter() {
     var batch: SpriteBatch? = null
     var pixelPerfectBuffer: FrameBuffer? = null
     var viewCamera: OrthographicCamera? = null
-    var gameCamera: OrthographicCamera? = null
     var viewport: Viewport? = null
 
     var showCollisionBoxes = true
@@ -32,8 +31,8 @@ open class JCoreGame: ApplicationAdapter() {
         batch = SpriteBatch()
 
         viewCamera = OrthographicCamera()
-        gameCamera = OrthographicCamera()
-        gameCamera!!.setToOrtho(false, resWidth.toFloat(), resHeight.toFloat())
+        Core.camera = OrthographicCamera()
+        Core.camera.setToOrtho(false, resWidth.toFloat(), resHeight.toFloat())
 
         viewport = FitViewport(resWidth.toFloat(), resHeight.toFloat(), viewCamera)
         viewport!!.apply()
@@ -80,15 +79,15 @@ open class JCoreGame: ApplicationAdapter() {
             it.update(Gdx.graphics.deltaTime)
         }
 
-        gameCamera!!.update()
-        Core.renderables.forEach { it.setView(gameCamera!!) }
+        Core.camera!!.update()
+        Core.renderables.forEach { it.setView(Core.camera!!) }
 
         pixelPerfectBuffer!!.begin()
 
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        batch!!.projectionMatrix = gameCamera!!.combined
+        batch!!.projectionMatrix = Core.camera!!.combined
         batch!!.begin()
 
         Core.images.forEach { it.draw(batch!!) }

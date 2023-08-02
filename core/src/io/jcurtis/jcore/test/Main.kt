@@ -9,8 +9,8 @@ import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.*
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
-class Main: JCoreGame() {
-    private val player: GameObject = GameObject()
+object Main: JCoreGame() {
+    lateinit var player: Player
     private val map: GameObject = GameObject()
 
     override fun init() {
@@ -27,29 +27,6 @@ class Main: JCoreGame() {
         }
         map.attach<TilemapCollider>()
 
-        player.attach<PlayerController>()
-        player.attach<AnimationRenderer>().apply {
-            addAnimation(
-                "idle",
-                AnimatedSpriteSheet(
-                    Core.assets.get("player.png", Texture::class.java),
-                    7,
-                    1,
-                    0.1f,
-                    0,
-                    0,
-                    3,
-                    1
-                )
-            )
-        }
-        player.attach<BoxCollider>().apply {
-            width = 14f
-            height = 12f
-        }
-        player.attach<RigidBody>()
-
-        player.getComponent<AnimationRenderer>()?.play("idle")
-        player.getComponent<AnimationRenderer>()?.flipH = true
+        player = Player()
     }
 }
