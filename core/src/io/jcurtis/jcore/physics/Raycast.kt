@@ -3,7 +3,7 @@ package io.jcurtis.jcore.physics
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Vector2
 import io.jcurtis.jcore.core.Core
-import io.jcurtis.jcore.gameobject.components.BoxCollider
+import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
 
 class Raycast {
     fun cast(from: Vector2, to: Vector2): List<BoxCollider> {

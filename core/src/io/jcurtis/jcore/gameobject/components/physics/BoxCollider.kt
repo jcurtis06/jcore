@@ -1,10 +1,11 @@
-package io.jcurtis.jcore.gameobject.components
+package io.jcurtis.jcore.gameobject.components.physics
 
 import com.badlogic.gdx.math.Rectangle
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.gameobject.components.Component
 
 
-class BoxCollider: Component() {
+class BoxCollider : Component() {
     var isTrigger = false
     var enterCallback: ((BoxCollider) -> Unit)? = null
     var stayCallback: ((BoxCollider) -> Unit)? = null

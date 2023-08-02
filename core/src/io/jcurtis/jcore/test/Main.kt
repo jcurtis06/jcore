@@ -6,10 +6,16 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.core.JCoreGame
 import io.jcurtis.jcore.gameobject.GameObject
-import io.jcurtis.jcore.gameobject.components.*
+import io.jcurtis.jcore.gameobject.components.graphics.AnimationRenderer
+import io.jcurtis.jcore.gameobject.components.graphics.Camera
+import io.jcurtis.jcore.gameobject.components.graphics.SmoothedCamera
+import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
+import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
+import io.jcurtis.jcore.gameobject.components.physics.RigidBody
+import io.jcurtis.jcore.gameobject.components.physics.TilemapCollider
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
-object Main: JCoreGame() {
+object Main : JCoreGame() {
     val camera: GameObject = GameObject()
     private val player: GameObject = GameObject()
     private val map: GameObject = GameObject()

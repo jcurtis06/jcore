@@ -1,8 +1,9 @@
-package io.jcurtis.jcore.gameobject.components
+package io.jcurtis.jcore.gameobject.components.graphics
 
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.gameobject.components.Component
 
-class Camera: Component() {
+class Camera : Component() {
     var isActive = true
 
     override fun init() {
