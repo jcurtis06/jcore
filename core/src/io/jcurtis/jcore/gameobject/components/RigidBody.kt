@@ -1,8 +1,13 @@
 package io.jcurtis.jcore.gameobject.components
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.physics.Raycast
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 class RigidBody: Component() {
@@ -28,51 +33,58 @@ class RigidBody: Component() {
     }
 
     fun moveAndSlide() {
-        val minStep = 16.0f
-        val new = transform.position.cpy().add(velocity)
-        var steps = 1
-        if(abs(velocity.x) > abs(velocity.y)) {
-            if(abs(velocity.x) > minStep)
-                steps = (abs(velocity.x) / minStep).roundToInt()
-        }
-        else {
-            if(abs(velocity.y) > minStep)
-                steps = (abs(velocity.x) / minStep).roundToInt()
-        }
+        val oldPos = Vector2(gameObject.transform.position)
+        val newPos = Vector2(gameObject.transform.position).add(velocity)
 
-        var step = velocity.cpy().scl(1/steps.toFloat())
+        val sweptBox = createSweptBox(oldPos, newPos)
 
-        for(i in 0 until steps) {
-            transform.position.x += step.x
+        // The closest valid position for the object
+        var closestValidX = newPos.x
+        var closestValidY = newPos.y
 
-            for (box in Core.colliders) {
-                if (box == collider) continue
-                if (collider.rectangle.overlaps(box.rectangle)) {
-                    if (step.x > 0) {
-                        transform.position.x = box.getLeft() - collider.rectangle.width
-                    } else {
-                        transform.position.x = box.getRight()
-                    }
-                    velocity.x = 0f
-                    return
+        for (box in Core.colliders) {
+            if (box == collider) continue
+            if (sweptBox.overlaps(box.rectangle)) {
+                println("found future collision")
+                // We have a collision, so we need to find the closest valid position
+                if (velocity.x > 0) {
+                    // Moving right
+                    println("collided right side")
+                    closestValidX = box.getLeft() - collider.width
+                    collidingDirection.right = true
+                } else if (velocity.x < 0) {
+                    // Moving left
+                    println("collided left side")
+                    closestValidX = box.getRight()
+                    collidingDirection.left = true
                 }
-            }
 
-            transform.position.y += step.y
-
-            for (box in Core.colliders) {
-                if (box == collider) continue
-                if (collider.rectangle.overlaps(box.rectangle)) {
-                    if (step.y > 0) {
-                        transform.position.y = box.getTop() - collider.rectangle.height
-                    } else {
-                        transform.position.y = box.getBottom()
-                    }
-                    velocity.y = 0f
-                    return
+                if (velocity.y > 0) {
+                    // Moving up
+                    println("collided top side")
+                    closestValidY = box.getBottom() - collider.height
+                    collidingDirection.up = true
+                } else if (velocity.y < 0) {
+                    // Moving down
+                    println("collided bottom side")
+                    closestValidY = box.getTop()
+                    collidingDirection.down = true
                 }
+
+                break
             }
         }
-        transform.position.set(new)
+
+        // No collision, so move the object to a valid position
+        gameObject.transform.position.set(closestValidX, closestValidY)
+    }
+
+    private fun createSweptBox(oldPos: Vector2, newPos: Vector2): Rectangle {
+        // We create a larger box that starts at the old position and extends to the new position
+        val x = min(oldPos.x, newPos.x)
+        val y = min(oldPos.y, newPos.y)
+        val width = abs(newPos.x - oldPos.x) + collider.width
+        val height = abs(newPos.y - oldPos.y) + collider.height
+        return Rectangle(x, y, width, height)
     }
 }

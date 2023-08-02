@@ -16,21 +16,22 @@ class PlayerController : Component() {
 
     override fun update(delta: Float) {
         val velocity = rigidbody!!.velocity
+        velocity.setZero()
 
         if (Gdx.input.isKeyPressed(Keys.D)) {
-            velocity.x += speed * delta
+            velocity.x += speed*delta
         }
 
         if (Gdx.input.isKeyPressed(Keys.A)) {
-            velocity.x -= speed * delta
+            velocity.x -= speed*delta
         }
 
         if (Gdx.input.isKeyPressed(Keys.W)) {
-            velocity.y += speed * delta
+            velocity.y += speed*delta
         }
 
         if (Gdx.input.isKeyPressed(Keys.S)) {
-            velocity.y -= speed * delta
+            velocity.y -= speed*delta
         }
 
         if (Gdx.input.isKeyPressed(Keys.Q)) {
@@ -38,6 +39,5 @@ class PlayerController : Component() {
         }
 
         rigidbody?.moveAndSlide()
-        velocity.set(0f, 0f)
     }
 }
