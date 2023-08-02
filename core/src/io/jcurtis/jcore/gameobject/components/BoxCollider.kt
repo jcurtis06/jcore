@@ -10,6 +10,8 @@ class BoxCollider: Component() {
     var stayCallback: ((BoxCollider) -> Unit)? = null
     var exitCallback: ((BoxCollider) -> Unit)? = null
 
+    var layer = 0
+
     var rectangle = Rectangle()
 
     var width = 0f

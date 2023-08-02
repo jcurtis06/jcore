@@ -18,11 +18,13 @@ open class JCoreGame: ApplicationAdapter() {
 
     var batch: SpriteBatch? = null
     var pixelPerfectBuffer: FrameBuffer? = null
+
     var viewCamera: OrthographicCamera? = null
-    var gameCamera: OrthographicCamera? = null
+    var gameCamera = Core.currentCamera
     var viewport: Viewport? = null
 
-    var showCollisionBoxes = true
+    var showCollisionBoxes = false
+    var showPositionPoints = false
 
     var debugRenderer: ShapeDrawer? = null
 
@@ -32,8 +34,7 @@ open class JCoreGame: ApplicationAdapter() {
         batch = SpriteBatch()
 
         viewCamera = OrthographicCamera()
-        gameCamera = OrthographicCamera()
-        gameCamera!!.setToOrtho(false, resWidth.toFloat(), resHeight.toFloat())
+        gameCamera.setToOrtho(false, resWidth.toFloat(), resHeight.toFloat())
 
         viewport = FitViewport(resWidth.toFloat(), resHeight.toFloat(), viewCamera)
         viewport!!.apply()
@@ -73,35 +74,34 @@ open class JCoreGame: ApplicationAdapter() {
         }
 
         Core.objects.forEach {
-            it.transform.position.set(
-                it.transform.position.x.roundToInt().toFloat(),
-                it.transform.position.y.roundToInt().toFloat()
-            )
             it.update(Gdx.graphics.deltaTime)
         }
 
-        gameCamera!!.update()
-        Core.renderables.forEach { it.setView(gameCamera!!) }
+        gameCamera.update()
+        Core.renderables.forEach { it.setView(gameCamera) }
 
         pixelPerfectBuffer!!.begin()
 
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        batch!!.projectionMatrix = gameCamera!!.combined
+        batch!!.projectionMatrix = gameCamera.combined
         batch!!.begin()
 
         Core.images.forEach { it.draw(batch!!) }
         Core.renderables.forEach { it.render(batch!!) }
-        Core.objects.forEach {
-            debugRenderer!!.setColor(0f, 1f, 0f, 1f)
 
-            debugRenderer!!.rectangle(
-                it.transform.position.x,
-                it.transform.position.y,
-                1f,
-                1f
-            )
+        if (showPositionPoints) {
+            Core.objects.forEach {
+                debugRenderer!!.setColor(0f, 1f, 0f, 1f)
+
+                debugRenderer!!.rectangle(
+                    it.transform.position.x,
+                    it.transform.position.y,
+                    1f,
+                    1f
+                )
+            }
         }
 
         if (showCollisionBoxes) {

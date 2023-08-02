@@ -1,7 +1,15 @@
 package io.jcurtis.jcore.gameobject.components
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.math.Round
+import io.jcurtis.jcore.physics.Raycast
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 class RigidBody: Component() {
     var velocity = Vector2(0f, 0f)
@@ -25,67 +33,74 @@ class RigidBody: Component() {
         collider = gameObject.getComponent<BoxCollider>()!!
     }
 
-    fun moveAndSlide(velocity: Vector2) {
-        collidingDirection.down = false
-        collidingDirection.up = false
-        collidingDirection.left = false
-        collidingDirection.right = false
-        collidingDirection.none = true
+    fun moveAndSlide() {
+        val oldPos = Vector2(transform.position)
+        var newPos = oldPos.cpy().add(velocity.x, 0f)  // Check horizontal movement first
 
-        val collidesX = checkCollisionsAt(transform.position.cpy().add(velocity.x, 0f))
-        val collidesY = checkCollisionsAt(transform.position.cpy().add(0f, velocity.y))
-        var collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
+        var sweptBox = createSweptBox(oldPos, newPos)
 
-        if (collidesX.isNotEmpty()) {
-            println("player colliding")
-            val box = collidesX[0]
-            if (velocity.x > 0) {
-                transform.position.x = box.getLeft() - collider.width
-                collidingDirection.right = true
+        var closestValidX = newPos.x
+        var collidedHorizontally = false
+        var collidedVertically = false
+
+        for (box in Core.colliders) {
+            if (box == collider) continue
+            if (sweptBox.overlaps(box.rectangle)) {
+                if (velocity.x > 0) {
+                    // Moving right
+                    closestValidX = box.getLeft() - collider.width
+                    collidingDirection.right = true
+                } else if (velocity.x < 0) {
+                    // Moving left
+                    closestValidX = box.getRight()
+                    collidingDirection.left = true
+                }
+
+                collidedHorizontally = true
+
+                break
             }
-            else {
-                transform.position.x = box.getRight()
-                collidingDirection.left = true
-            }
-            velocity.x = 0f
         }
 
-        if (collidesY.isNotEmpty()) {
-            val box = collidesY[0]
-            if (velocity.y > 0) {
-                transform.position.y = box.getBottom() - collider.height
-                collidingDirection.up = true
+        newPos = oldPos.cpy().add(0f, velocity.y)  // Now check vertical movement
+        sweptBox = createSweptBox(oldPos, newPos)
+
+        var closestValidY = newPos.y
+
+        for (box in Core.colliders) {
+            if (box == collider) continue
+            if (sweptBox.overlaps(box.rectangle)) {
+                if (velocity.y > 0) {
+                    // Moving up
+                    closestValidY = box.getBottom() - collider.height
+                    collidingDirection.up = true
+                } else if (velocity.y < 0) {
+                    // Moving down
+                    closestValidY = box.getTop()
+                    collidingDirection.down = true
+                }
+
+                collidedVertically = true
+
+                break
             }
-            else {
-                transform.position.y = box.getTop()
-                collidingDirection.down = true
-            }
-            velocity.y = 0f
         }
 
-        if (collidesXY.isNotEmpty() && collidesX.isEmpty() && collidesY.isEmpty()) {
-            val box = collidesXY[0]
-            if (velocity.x > 0)
-                transform.position.x = box.getLeft() - collider.width
-            else
-                transform.position.x = box.getRight()
-            if (velocity.y > 0)
-                transform.position.y = box.getBottom() - collider.height
-            else
-                transform.position.y = box.getTop()
-            velocity.x = 0f
-            velocity.y = 0f
+        if (collidedHorizontally && collidedVertically) {
+            // Both collisions detected, handle corner case
+            gameObject.transform.position.set(Round.round(closestValidX), Round.round(oldPos.y))
+        } else {
+            // No corner collision, proceed as before
+            gameObject.transform.position.set(Round.round(closestValidX), Round.round(closestValidY))
         }
-
-        collidingDirection.none = !(collidingDirection.down || collidingDirection.up || collidingDirection.left || collidingDirection.right)
-
-        transform.position.add(velocity)
     }
 
-    private fun checkCollisionsAt(position: Vector2): List<BoxCollider> {
-        collider.rectangle.x = position.x
-        collider.rectangle.y = position.y
-
-        return Core.colliders.filter { it.rectangle != collider.rectangle && it.rectangle.overlaps(collider.rectangle) }
+    private fun createSweptBox(oldPos: Vector2, newPos: Vector2): Rectangle {
+        // We create a larger box that starts at the old position and extends to the new position
+        val x = min(oldPos.x, newPos.x)
+        val y = min(oldPos.y, newPos.y)
+        val width = abs(newPos.x - oldPos.x) + collider.width
+        val height = abs(newPos.y - oldPos.y) + collider.height
+        return Rectangle(x, y, width, height)
     }
 }
