@@ -34,6 +34,11 @@ object Main : JCoreGame() {
 
         map.attach<Tilemap>().apply {
             map = Core.assets.get("test.tmx", TiledMap::class.java)
+            getObject("objects", "player-spawn")?.let {
+                val x = it.properties["x"] as Float
+                val y = it.properties["y"] as Float
+                player.transform.position.set(x, y)
+            }
         }
         map.attach<TilemapCollider>()
 
