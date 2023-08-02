@@ -39,6 +39,8 @@ class RigidBody: Component() {
         var sweptBox = createSweptBox(oldPos, newPos)
 
         var closestValidX = newPos.x
+        var collidedHorizontally = false
+        var collidedVertically = false
 
         for (box in Core.colliders) {
             if (box == collider) continue
@@ -53,6 +55,8 @@ class RigidBody: Component() {
                     collidingDirection.left = true
                 }
 
+                collidedHorizontally = true
+
                 break
             }
         }
@@ -65,7 +69,6 @@ class RigidBody: Component() {
         for (box in Core.colliders) {
             if (box == collider) continue
             if (sweptBox.overlaps(box.rectangle)) {
-
                 if (velocity.y > 0) {
                     // Moving up
                     closestValidY = box.getBottom() - collider.height
@@ -76,12 +79,19 @@ class RigidBody: Component() {
                     collidingDirection.down = true
                 }
 
+                collidedVertically = true
+
                 break
             }
         }
 
-        // No collision, so move the object to a valid position
-        gameObject.transform.position.set(closestValidX, closestValidY)
+        if (collidedHorizontally && collidedVertically) {
+            // Both collisions detected, handle corner case
+            gameObject.transform.position.set(closestValidX, oldPos.y)
+        } else {
+            // No corner collision, proceed as before
+            gameObject.transform.position.set(closestValidX, closestValidY)
+        }
     }
 
     private fun createSweptBox(oldPos: Vector2, newPos: Vector2): Rectangle {

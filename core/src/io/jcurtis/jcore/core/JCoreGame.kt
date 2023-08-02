@@ -22,7 +22,7 @@ open class JCoreGame: ApplicationAdapter() {
     var gameCamera: OrthographicCamera? = null
     var viewport: Viewport? = null
 
-    var showCollisionBoxes = false
+    var showCollisionBoxes = true
 
     var debugRenderer: ShapeDrawer? = null
 
