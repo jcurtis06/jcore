@@ -21,7 +21,7 @@ object Main : JCoreGame() {
     private val map: GameObject = GameObject()
 
     override fun init() {
-        showCollisionBoxes = false
+        showCollisionBoxes = true
         Core.assets.setLoader(TiledMap::class.java, TmxMapLoader())
         Core.assets.load("slime.png", Texture::class.java)
         Core.assets.load("player.png", Texture::class.java)
