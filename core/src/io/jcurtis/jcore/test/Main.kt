@@ -21,6 +21,7 @@ object Main: JCoreGame() {
         Core.assets.finishLoading()
 
         camera.attach<Camera>()
+        camera.attach<SmoothedCamera>()
 
         map.attach<Tilemap>().apply {
             map = Core.assets.get("test.tmx", TiledMap::class.java)

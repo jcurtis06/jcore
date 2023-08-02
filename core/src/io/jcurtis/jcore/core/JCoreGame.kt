@@ -18,6 +18,7 @@ open class JCoreGame: ApplicationAdapter() {
 
     var batch: SpriteBatch? = null
     var pixelPerfectBuffer: FrameBuffer? = null
+
     var viewCamera: OrthographicCamera? = null
     var gameCamera = Core.currentCamera
     var viewport: Viewport? = null
@@ -73,10 +74,6 @@ open class JCoreGame: ApplicationAdapter() {
         }
 
         Core.objects.forEach {
-            it.transform.position.set(
-                it.transform.position.x.roundToInt().toFloat(),
-                it.transform.position.y.roundToInt().toFloat()
-            )
             it.update(Gdx.graphics.deltaTime)
         }
 
@@ -88,7 +85,7 @@ open class JCoreGame: ApplicationAdapter() {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        batch!!.projectionMatrix = gameCamera!!.combined
+        batch!!.projectionMatrix = gameCamera.combined
         batch!!.begin()
 
         Core.images.forEach { it.draw(batch!!) }
