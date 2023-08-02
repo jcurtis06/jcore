@@ -9,11 +9,9 @@ import kotlin.math.roundToInt
 class PlayerController : Component() {
     private var speed = 100
     private var rigidbody: RigidBody? = null
-    lateinit var image: Image
 
     override fun init() {
         rigidbody = gameObject.getComponent<RigidBody>()
-        image = gameObject.getComponent<Image>()!!
     }
 
     override fun update(delta: Float) {
@@ -34,10 +32,6 @@ class PlayerController : Component() {
 
         if (Gdx.input.isKeyPressed(Keys.S)) {
             velocity.y -= speed*delta
-        }
-
-        if (Gdx.input.isKeyPressed(Keys.Q)) {
-            image.rotation += 1
         }
 
         rigidbody?.moveAndSlide()
