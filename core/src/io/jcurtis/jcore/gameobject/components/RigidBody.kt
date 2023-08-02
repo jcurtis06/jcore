@@ -33,40 +33,45 @@ class RigidBody: Component() {
     }
 
     fun moveAndSlide() {
-        val oldPos = Vector2(gameObject.transform.position)
-        val newPos = Vector2(gameObject.transform.position).add(velocity)
+        val oldPos = Vector2(transform.position)
+        var newPos = oldPos.cpy().add(velocity.x, 0f)  // Check horizontal movement first
 
-        val sweptBox = createSweptBox(oldPos, newPos)
+        var sweptBox = createSweptBox(oldPos, newPos)
 
-        // The closest valid position for the object
         var closestValidX = newPos.x
+
+        for (box in Core.colliders) {
+            if (box == collider) continue
+            if (sweptBox.overlaps(box.rectangle)) {
+                if (velocity.x > 0) {
+                    // Moving right
+                    closestValidX = box.getLeft() - collider.width
+                    collidingDirection.right = true
+                } else if (velocity.x < 0) {
+                    // Moving left
+                    closestValidX = box.getRight()
+                    collidingDirection.left = true
+                }
+
+                break
+            }
+        }
+
+        newPos = oldPos.cpy().add(0f, velocity.y)  // Now check vertical movement
+        sweptBox = createSweptBox(oldPos, newPos)
+
         var closestValidY = newPos.y
 
         for (box in Core.colliders) {
             if (box == collider) continue
             if (sweptBox.overlaps(box.rectangle)) {
-                println("found future collision")
-                // We have a collision, so we need to find the closest valid position
-                if (velocity.x > 0) {
-                    // Moving right
-                    println("collided right side")
-                    closestValidX = box.getLeft() - collider.width
-                    collidingDirection.right = true
-                } else if (velocity.x < 0) {
-                    // Moving left
-                    println("collided left side")
-                    closestValidX = box.getRight()
-                    collidingDirection.left = true
-                }
 
                 if (velocity.y > 0) {
                     // Moving up
-                    println("collided top side")
                     closestValidY = box.getBottom() - collider.height
                     collidingDirection.up = true
                 } else if (velocity.y < 0) {
                     // Moving down
-                    println("collided bottom side")
                     closestValidY = box.getTop()
                     collidingDirection.down = true
                 }
