@@ -2,6 +2,7 @@ package io.jcurtis.jcore.gameobject
 
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
+import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
 import io.jcurtis.jcore.gameobject.components.physics.Transform
 import io.jcurtis.jcore.graphics.Renderable
 
@@ -64,11 +65,16 @@ class GameObject {
      * @param T The component to detach.
      */
     inline fun <reified T : Component> detach() {
-        components.forEach {
-            if (it is T) {
-                components.remove(it)
-            }
+        val component = getComponent<T>()
+
+        if (component == null || component is Transform) {
+            println("This component does not exist or cannot be detached.")
+            return
         }
+
+        if (component is Renderable) Core.renderables.remove(component)
+        if (component is BoxCollider) Core.colliders.remove(component)
+        components.remove(component)
     }
 
     /**
