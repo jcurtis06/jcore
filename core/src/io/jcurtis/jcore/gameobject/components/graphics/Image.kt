@@ -1,11 +1,16 @@
-package io.jcurtis.jcore.gameobject.components
+package io.jcurtis.jcore.gameobject.components.graphics
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.gameobject.components.Component
 import kotlin.math.roundToInt
 
+/**
+ * A component that renders a texture to the screen.
+ */
+@Suppress("unused")
 class Image : Component() {
     private var texture: Texture? = null
     private var sprite: Sprite = Sprite()

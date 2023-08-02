@@ -1,13 +1,15 @@
-package io.jcurtis.jcore.gameobject.components
+package io.jcurtis.jcore.gameobject.components.physics
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
 import io.jcurtis.jcore.gameobject.GameObject
+import io.jcurtis.jcore.gameobject.components.Component
+import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
 
 /**
  * Adds collisions to a [Tilemap] component
  */
-class TilemapCollider: Component() {
+class TilemapCollider : Component() {
     private lateinit var tilemap: Tilemap
 
     var tileLayer = 0
@@ -24,7 +26,7 @@ class TilemapCollider: Component() {
     override fun postInit() {
         // Try to retrieve the collision layer from the tilemap, if it doesn't exist, throw an exception
         val collisionLayer = tilemap.map.layers.get(collisionTag) as TiledMapTileLayer?
-                ?: throw Exception("TilemapCollider requires a collision layer")
+            ?: throw Exception("TilemapCollider requires a collision layer")
 
         // Create a 2D array (grid) to keep track of the tiles that have been explored
         val exploredTiles = Array(collisionLayer.width) { BooleanArray(collisionLayer.height) }
@@ -47,7 +49,7 @@ class TilemapCollider: Component() {
         }
 
         // For each collider in the colliders list
-        colliderList.forEach{ collider ->
+        colliderList.forEach { collider ->
             // Create a new game object
             val gameObject = GameObject()
             // Set its x and y position according to the collider
@@ -108,12 +110,15 @@ class TilemapCollider: Component() {
 
     private fun isExplored(x: Int, y: Int, explored: Array<BooleanArray>, tl: TiledMapTileLayer): Boolean {
         return (
-            x < 0 || y < 0 || // Check if x or y is negative, i.e., out of bounds of the tilemap
-            x >= tl.width || y >= tl.height || // Check if x or y is beyond the tilemap's width or height
-            explored[x][y] || // Check if the tile at coordinates x, y has already been explored
-            tl.getCell(x, y) == null || // Check if there is no cell at the given coordinates
-            !tl.getCell(x, y).tile.properties.get("collidable", Boolean::class.java) // Check if the cell at the given coordinates is not collidable
-        )
+                x < 0 || y < 0 || // Check if x or y is negative, i.e., out of bounds of the tilemap
+                        x >= tl.width || y >= tl.height || // Check if x or y is beyond the tilemap's width or height
+                        explored[x][y] || // Check if the tile at coordinates x, y has already been explored
+                        tl.getCell(x, y) == null || // Check if there is no cell at the given coordinates
+                        !tl.getCell(x, y).tile.properties.get(
+                            "collidable",
+                            Boolean::class.java
+                        ) // Check if the cell at the given coordinates is not collidable
+                )
     }
 
 

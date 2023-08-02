@@ -2,17 +2,18 @@ package io.jcurtis.jcore.core
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.*
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import space.earlygrey.shapedrawer.ShapeDrawer
-import kotlin.math.roundToInt
 
-open class JCoreGame: ApplicationAdapter() {
+open class JCoreGame : ApplicationAdapter() {
     val resWidth = 320
     val resHeight = 180
 

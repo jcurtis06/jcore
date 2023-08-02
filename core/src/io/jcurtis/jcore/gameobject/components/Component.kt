@@ -1,6 +1,7 @@
 package io.jcurtis.jcore.gameobject.components
 
 import io.jcurtis.jcore.gameobject.GameObject
+import io.jcurtis.jcore.gameobject.components.physics.Transform
 
 abstract class Component() {
     lateinit var transform: Transform

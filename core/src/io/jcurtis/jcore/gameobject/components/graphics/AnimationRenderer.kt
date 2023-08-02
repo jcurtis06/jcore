@@ -1,16 +1,14 @@
-package io.jcurtis.jcore.gameobject.components
+package io.jcurtis.jcore.gameobject.components.graphics
 
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.graphics.Renderable
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
-// Animated sprite sheet = stores frames
-// Animation renderer = animates frames and picks which sprite sheet to render
-
-class AnimationRenderer: Component(), Renderable {
+class AnimationRenderer : Component(), Renderable {
     private var spriteSheetMap = mutableMapOf<String, AnimatedSpriteSheet>()
     private var animation: Animation<TextureRegion>? = null
 

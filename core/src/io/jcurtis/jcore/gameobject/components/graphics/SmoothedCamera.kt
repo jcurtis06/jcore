@@ -1,12 +1,12 @@
-package io.jcurtis.jcore.gameobject.components
+package io.jcurtis.jcore.gameobject.components.graphics
 
 import com.badlogic.gdx.math.Vector2
-import kotlin.math.roundToInt
+import io.jcurtis.jcore.gameobject.components.Component
 
 /**
  * Smoothly follows a target position
  */
-class SmoothedCamera: Component() {
+class SmoothedCamera : Component() {
     private var targetX = 0
     private var targetY = 0
     var smoothing = 10
@@ -25,6 +25,7 @@ class SmoothedCamera: Component() {
         transform.position.x += (targetX - transform.position.x) / smoothing
         transform.position.y += (targetY - transform.position.y) / smoothing
     }
+
     override fun init() {
         return
     }

@@ -1,17 +1,14 @@
-package io.jcurtis.jcore.gameobject.components
+package io.jcurtis.jcore.gameobject.components.physics
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.math.Round
-import io.jcurtis.jcore.physics.Raycast
 import kotlin.math.abs
-import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
 
-class RigidBody: Component() {
+class RigidBody : Component() {
     var velocity = Vector2(0f, 0f)
 
     private lateinit var collider: BoxCollider
