@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.math.Round
 import io.jcurtis.jcore.physics.Raycast
 import kotlin.math.abs
 import kotlin.math.max
@@ -87,10 +88,10 @@ class RigidBody: Component() {
 
         if (collidedHorizontally && collidedVertically) {
             // Both collisions detected, handle corner case
-            gameObject.transform.position.set(closestValidX, oldPos.y)
+            gameObject.transform.position.set(Round.round(closestValidX), Round.round(oldPos.y))
         } else {
             // No corner collision, proceed as before
-            gameObject.transform.position.set(closestValidX, closestValidY)
+            gameObject.transform.position.set(Round.round(closestValidX), Round.round(closestValidY))
         }
     }
 

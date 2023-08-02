@@ -3,16 +3,17 @@ package io.jcurtis.jcore.test
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import io.jcurtis.jcore.core.Core
-import io.jcurtis.jcore.gameobject.components.BoxCollider
-import io.jcurtis.jcore.gameobject.components.Component
-import io.jcurtis.jcore.gameobject.components.RigidBody
+import io.jcurtis.jcore.gameobject.components.*
+import kotlin.math.roundToInt
 
 class PlayerController : Component() {
     private var speed = 100
     private var rigidbody: RigidBody? = null
+    lateinit var image: Image
 
     override fun init() {
         rigidbody = gameObject.getComponent<RigidBody>()
+        image = gameObject.getComponent<Image>()!!
     }
 
     override fun update(delta: Float) {
@@ -36,10 +37,10 @@ class PlayerController : Component() {
         }
 
         if (Gdx.input.isKeyPressed(Keys.Q)) {
-            transform.position.setZero()
+            image.rotation += 1
         }
 
         rigidbody?.moveAndSlide()
-        Main.camera.transform.position.set(transform.position)
+        Main.camera.getComponent<SmoothedCamera>()?.setTarget(transform.position.x.toInt(), transform.position.y.toInt())
     }
 }

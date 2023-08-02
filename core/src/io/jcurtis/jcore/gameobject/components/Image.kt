@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import io.jcurtis.jcore.core.Core
+import kotlin.math.roundToInt
 
 class Image : Component() {
     private var texture: Texture? = null
@@ -26,7 +27,7 @@ class Image : Component() {
 
     fun draw(batch: SpriteBatch) {
         if (texture == null) return
-        sprite.setPosition(transform.position.x, transform.position.y)
+        sprite.setPosition(transform.position.x.roundToInt().toFloat(), transform.position.y.roundToInt().toFloat())
         sprite.draw(batch)
     }
 
