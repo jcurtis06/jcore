@@ -12,7 +12,7 @@ class Tilemap: Component(), Renderable {
         set(value) {
             field = value
             renderer = OrthogonalTiledMapRenderer(value)
-            renderer.setView(Core.camera)
+            renderer.setView(Core.currentCamera)
         }
 
     private var renderer: OrthogonalTiledMapRenderer = OrthogonalTiledMapRenderer(map)

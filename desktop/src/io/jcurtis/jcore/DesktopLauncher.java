@@ -10,6 +10,6 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("jcore");
-		new Lwjgl3Application(new Main(), config);
+		new Lwjgl3Application(Main.INSTANCE, config);
 	}
 }
