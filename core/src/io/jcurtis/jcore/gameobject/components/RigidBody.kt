@@ -2,6 +2,8 @@ package io.jcurtis.jcore.gameobject.components
 
 import com.badlogic.gdx.math.Vector2
 import io.jcurtis.jcore.core.Core
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class RigidBody: Component() {
     var velocity = Vector2(0f, 0f)
@@ -25,68 +27,52 @@ class RigidBody: Component() {
         collider = gameObject.getComponent<BoxCollider>()!!
     }
 
-    fun moveAndSlide(velocity: Vector2) {
-        collidingDirection.down = false
-        collidingDirection.up = false
-        collidingDirection.left = false
-        collidingDirection.right = false
-        collidingDirection.none = true
-
-        val collidesX = checkCollisionsAt(transform.position.cpy().add(velocity.x, 0f))
-        val collidesY = checkCollisionsAt(transform.position.cpy().add(0f, velocity.y))
-        val collidesXY = checkCollisionsAt(transform.position.cpy().add(velocity.x, velocity.y))
-
-        if (collidesX.isNotEmpty()) {
-            val box = collidesX[0]
-            if (velocity.x > 0) {
-                transform.position.x = box.getLeft() - collider.width
-                collidingDirection.right = true
-            }
-            else {
-                transform.position.x = box.getRight()
-                collidingDirection.left = true
-            }
-            velocity.x = 0f
+    fun moveAndSlide() {
+        val minStep = 16.0f
+        val new = transform.position.cpy().add(velocity)
+        var steps = 1
+        if(abs(velocity.x) > abs(velocity.y)) {
+            if(abs(velocity.x) > minStep)
+                steps = (abs(velocity.x) / minStep).roundToInt()
+        }
+        else {
+            if(abs(velocity.y) > minStep)
+                steps = (abs(velocity.x) / minStep).roundToInt()
         }
 
-        if (collidesY.isNotEmpty()) {
-            val box = collidesY[0]
-            if (velocity.y > 0) {
-                transform.position.y = box.getBottom() - collider.height
-                collidingDirection.up = true
+        var step = velocity.cpy().scl(1/steps.toFloat())
+
+        for(i in 0 until steps) {
+            transform.position.x += step.x
+
+            for (box in Core.colliders) {
+                if (box == collider) continue
+                if (collider.rectangle.overlaps(box.rectangle)) {
+                    if (step.x > 0) {
+                        transform.position.x = box.getLeft() - collider.rectangle.width
+                    } else {
+                        transform.position.x = box.getRight()
+                    }
+                    velocity.x = 0f
+                    return
+                }
             }
-            else {
-                transform.position.y = box.getTop()
-                collidingDirection.down = true
+
+            transform.position.y += step.y
+
+            for (box in Core.colliders) {
+                if (box == collider) continue
+                if (collider.rectangle.overlaps(box.rectangle)) {
+                    if (step.y > 0) {
+                        transform.position.y = box.getTop() - collider.rectangle.height
+                    } else {
+                        transform.position.y = box.getBottom()
+                    }
+                    velocity.y = 0f
+                    return
+                }
             }
-            velocity.y = 0f
         }
-
-        if (collidesXY.isNotEmpty() && collidesX.isEmpty() && collidesY.isEmpty()) {
-            val box = collidesXY[0]
-            if (velocity.x > 0)
-                transform.position.x = box.getLeft() - collider.width
-            else
-                transform.position.x = box.getRight()
-            if (velocity.y > 0)
-                transform.position.y = box.getBottom() - collider.height
-            else
-                transform.position.y = box.getTop()
-            velocity.x = 0f
-            velocity.y = 0f
-        }
-
-        collidingDirection.none = !(collidingDirection.down || collidingDirection.up || collidingDirection.left || collidingDirection.right)
-
-        transform.position.add(velocity)
-    }
-
-    private fun checkCollisionsAt(position: Vector2): List<BoxCollider> {
-        collider.rectangle.x = position.x
-        collider.rectangle.y = position.y
-
-        return Core.colliders.filter { it.rectangle != collider.rectangle &&
-                                        it.layer == collider.layer &&
-                                        it.rectangle.overlaps(collider.rectangle) }
+        transform.position.set(new)
     }
 }
