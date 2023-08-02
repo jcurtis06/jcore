@@ -15,7 +15,7 @@ object Core {
 
     var objectsToAdd = mutableListOf<GameObject>()
 
-    var camera: OrthographicCamera = OrthographicCamera()
+    var currentCamera: OrthographicCamera = OrthographicCamera()
 
     var assets = AssetManager()
 }

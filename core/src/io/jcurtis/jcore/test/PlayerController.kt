@@ -2,6 +2,7 @@ package io.jcurtis.jcore.test
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.BoxCollider
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.RigidBody
@@ -39,5 +40,6 @@ class PlayerController : Component() {
         }
 
         rigidbody?.moveAndSlide()
+        Main.camera.transform.position.set(transform.position)
     }
 }

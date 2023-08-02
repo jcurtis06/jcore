@@ -8,7 +8,8 @@ import io.jcurtis.jcore.core.JCoreGame
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.*
 
-class Main: JCoreGame() {
+object Main: JCoreGame() {
+    val camera: GameObject = GameObject()
     private val player: GameObject = GameObject()
     private val map: GameObject = GameObject()
 
@@ -18,6 +19,8 @@ class Main: JCoreGame() {
         Core.assets.load("badlogic.jpg", Texture::class.java)
         Core.assets.load("test.tmx", TiledMap::class.java)
         Core.assets.finishLoading()
+
+        camera.attach<Camera>()
 
         map.attach<Tilemap>().apply {
             map = Core.assets.get("test.tmx", TiledMap::class.java)
@@ -31,6 +34,5 @@ class Main: JCoreGame() {
             height = 12f
         }
         player.attach<RigidBody>()
-
     }
 }
