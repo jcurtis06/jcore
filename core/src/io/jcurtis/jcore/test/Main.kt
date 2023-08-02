@@ -7,6 +7,7 @@ import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.core.JCoreGame
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.*
+import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
 object Main: JCoreGame() {
     val camera: GameObject = GameObject()
@@ -14,8 +15,10 @@ object Main: JCoreGame() {
     private val map: GameObject = GameObject()
 
     override fun init() {
+        showCollisionBoxes = false
         Core.assets.setLoader(TiledMap::class.java, TmxMapLoader())
         Core.assets.load("slime.png", Texture::class.java)
+        Core.assets.load("player.png", Texture::class.java)
         Core.assets.load("badlogic.jpg", Texture::class.java)
         Core.assets.load("test.tmx", TiledMap::class.java)
         Core.assets.finishLoading()
@@ -29,11 +32,27 @@ object Main: JCoreGame() {
         map.attach<TilemapCollider>()
 
         player.attach<PlayerController>()
-        player.attach<Image>().setTexture(Core.assets.get("slime.png", Texture::class.java))
+        player.attach<AnimationRenderer>().apply {
+            addAnimation(
+                "idle",
+                AnimatedSpriteSheet(
+                    Core.assets.get("player.png", Texture::class.java),
+                    7,
+                    1,
+                    0.1f,
+                    0,
+                    0,
+                    3,
+                    1
+                )
+            )
+        }
         player.attach<BoxCollider>().apply {
             width = 14f
             height = 12f
         }
         player.attach<RigidBody>()
+        player.getComponent<AnimationRenderer>()?.play("idle")
+        player.getComponent<AnimationRenderer>()?.flipH = true
     }
 }
