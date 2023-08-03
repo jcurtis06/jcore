@@ -9,6 +9,7 @@ import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
 /**
  * Adds collisions to a [Tilemap] component
  */
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class TilemapCollider : Component() {
     private lateinit var tilemap: Tilemap
 
@@ -122,7 +123,5 @@ class TilemapCollider : Component() {
     }
 
 
-    override fun update(delta: Float) {
-        return
-    }
+    override fun update(delta: Float) = Unit
 }

@@ -10,12 +10,11 @@ import kotlin.math.roundToInt
 
 /**
  * A component that renders a texture to the screen.
+ * @property offset The offset of the image from the game object's position.
+ * @property rotation The rotation of the image.
  */
-@Suppress("unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class Image : Component() {
-    private var texture: Texture? = null
-    private var sprite: Sprite = Sprite()
-
     var offset = Vector2()
 
     var rotation = 0f
@@ -24,17 +23,25 @@ class Image : Component() {
             sprite.rotation = value
         }
 
+    private var sprite: Sprite = Sprite()
+
     init {
         Core.images.add(this)
     }
 
+    /**
+     * Sets the texture of the image.
+     * @param texture The texture to use.
+     */
     fun setTexture(texture: Texture) {
-        this.texture = texture
         sprite = Sprite(texture)
     }
 
+    /**
+     * Draws the image to the screen.
+     * @param batch The sprite batch to draw with.
+     */
     fun draw(batch: SpriteBatch) {
-        if (texture == null) return
         sprite.setPosition(
             (transform.position.x + offset.x).roundToInt().toFloat(),
             (transform.position.y + offset.y).roundToInt().toFloat()
@@ -42,11 +49,7 @@ class Image : Component() {
         sprite.draw(batch)
     }
 
-    override fun update(delta: Float) {
-        return
-    }
+    override fun update(delta: Float) = Unit
 
-    override fun init() {
-        return
-    }
+    override fun init() = Unit
 }

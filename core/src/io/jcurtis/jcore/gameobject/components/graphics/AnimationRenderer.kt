@@ -10,13 +10,18 @@ import io.jcurtis.jcore.graphics.Renderable
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 import kotlin.math.roundToInt
 
+/**
+ * A component that renders an animation.
+ * @property flipH Whether to flip the animation horizontally.
+ * @property offset The offset of the animation from the game object's position.
+ */
+@Suppress("MemberVisibilityCanBePrivate")
 class AnimationRenderer : Component(), Renderable {
+    var flipH = false
+    var offset = Vector2()
+
     private var spriteSheetMap = mutableMapOf<String, AnimatedSpriteSheet>()
     private var animation: Animation<TextureRegion>? = null
-
-    var flipH = false
-
-    var offset = Vector2()
 
     private var currentAnimation: AnimatedSpriteSheet? = null
         set(value) {
@@ -27,14 +32,29 @@ class AnimationRenderer : Component(), Renderable {
 
     private var stateTime = 0f
 
-    fun play(animation: String) {
-        currentAnimation = spriteSheetMap[animation]
-    }
-
+    /**
+     * Adds an animation to the component.
+     * @param name The name of the animation.
+     * @param sheet The sprite sheet to use for the animation.
+     */
     fun addAnimation(name: String, sheet: AnimatedSpriteSheet) {
         spriteSheetMap[name] = sheet
     }
 
+    /**
+     * Plays an animation if it exists.
+     * @param animation The name of the animation to play.
+     * @see addAnimation
+     */
+    fun play(animation: String) {
+        if (spriteSheetMap[animation] == null) throw Exception("Animation $animation does not exist.")
+        if (currentAnimation == spriteSheetMap[animation]) return
+        currentAnimation = spriteSheetMap[animation]
+    }
+
+    /**
+     * @return The current frame of the animation.
+     */
     private fun getCurrentFrame(): TextureRegion {
         val currentFrame = animation!!.getKeyFrame(stateTime, true)
 
@@ -59,9 +79,6 @@ class AnimationRenderer : Component(), Renderable {
         )
     }
 
-    override fun setView(camera: OrthographicCamera) {
-    }
-
-    override fun init() {
-    }
+    override fun setView(camera: OrthographicCamera) = Unit
+    override fun init() = Unit
 }

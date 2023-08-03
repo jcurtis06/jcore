@@ -31,12 +31,10 @@ class GameObject {
 
     /** Initialize all the components attached to the GameObject */
     fun init() {
-        println("init")
         components.forEach { it.init() }
     }
 
     fun postInit() {
-        println("post init")
         components.forEach { it.postInit() }
     }
 
@@ -50,9 +48,8 @@ class GameObject {
         val component = T::class.java.getDeclaredConstructor().newInstance()
 
         if (component is Transform) transform = component
-        if (transform == null) println("Transform is null! Component will not be mounted.").also { return component }
         component.gameObject = this
-        if (component !is Transform) component.transform = transform!!
+        if (component !is Transform) component.transform = transform
 
         if (component is Renderable) Core.renderables.add(component)
 
@@ -65,12 +62,8 @@ class GameObject {
      * @param T The component to detach.
      */
     inline fun <reified T : Component> detach() {
-        val component = getComponent<T>()
-
-        if (component == null || component is Transform) {
-            println("This component does not exist or cannot be detached.")
-            return
-        }
+        val component = getComponent<T>() ?: throw Exception("Component not found")
+        if (component is Transform) throw Exception("Cannot detach Transform")
 
         if (component is Renderable) Core.renderables.remove(component)
         if (component is BoxCollider) Core.colliders.remove(component)
