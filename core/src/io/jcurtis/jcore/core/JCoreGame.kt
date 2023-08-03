@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import space.earlygrey.shapedrawer.ShapeDrawer
@@ -22,6 +25,10 @@ open class JCoreGame : ApplicationAdapter() {
     var resWidth = 320
     var resHeight = 180
 
+    var timeStep = 1 / 60f
+    var velocityIterations = 6
+    var positionIterations = 2
+
     private lateinit var batch: SpriteBatch
     private lateinit var pixelPerfectBuffer: FrameBuffer
 
@@ -33,6 +40,8 @@ open class JCoreGame : ApplicationAdapter() {
     var showPositionPoints = false
 
     private lateinit var debugRenderer: ShapeDrawer
+
+    private lateinit var box2dDebug: Box2DDebugRenderer
 
     private var firstFrame = true
 
@@ -49,6 +58,7 @@ open class JCoreGame : ApplicationAdapter() {
         pixelPerfectBuffer.colorBufferTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
 
         debugRenderer = ShapeDrawer(batch, TextureRegion(Texture(Gdx.files.internal("pixel.png"))))
+        box2dDebug = Box2DDebugRenderer()
 
         init()
 
@@ -73,13 +83,15 @@ open class JCoreGame : ApplicationAdapter() {
 
         if (Core.objectsToAdd.isNotEmpty()) {
             Core.objects.addAll(Core.objectsToAdd)
+            Core.objectsToAdd.forEach { it.init() }
             Core.objectsToAdd.clear()
-            Core.objects.forEach { it.init() }
         }
 
         Core.objects.forEach {
             it.update(Gdx.graphics.deltaTime)
         }
+
+        Core.world.step(timeStep, velocityIterations, positionIterations);
 
         gameCamera.update()
         Core.renderables.forEach { it.setView(gameCamera) }
@@ -95,29 +107,15 @@ open class JCoreGame : ApplicationAdapter() {
         Core.images.forEach { it.draw(batch) }
         Core.renderables.forEach { it.render(batch) }
 
-        if (showPositionPoints) {
-            Core.objects.forEach {
-                debugRenderer.setColor(0f, 1f, 0f, 1f)
-
-                debugRenderer.rectangle(
-                    it.transform.position.x, it.transform.position.y, 1f, 1f
-                )
-            }
-        }
-
-        if (showCollisionBoxes) {
-            Core.colliders.forEach {
-                debugRenderer.setColor(0f, 0f, 1f, 0.2f)
-                debugRenderer.rectangle(
-                    it.rectangle
-                )
-
-                debugRenderer.setColor(1f, 0f, 0f, 0.5f)
-                debugRenderer.filledRectangle(
-                    it.rectangle
-                )
-            }
-        }
+//        if (showPositionPoints) {
+//            Core.objects.forEach {
+//                debugRenderer.setColor(0f, 1f, 0f, 1f)
+//
+//                debugRenderer.rectangle(
+//                    it.transform.position.x, it.transform.position.y, 1f, 1f
+//                )
+//            }
+//        }
 
         batch.end()
         pixelPerfectBuffer.end()
@@ -134,6 +132,8 @@ open class JCoreGame : ApplicationAdapter() {
             pixelPerfectBuffer.colorBufferTexture, 0f, 0f, viewport.worldWidth, viewport.worldHeight, 0f, 0f, 1f, 1f
         )
         batch.end()
+
+//        box2dDebug.render(Core.world, gameCamera.combined)
     }
 
     override fun resize(width: Int, height: Int) {

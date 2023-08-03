@@ -2,6 +2,7 @@ package io.jcurtis.jcore.gameobject.components.physics
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
 import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.physics.box2d.PolygonShape
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
@@ -38,31 +39,40 @@ class TilemapCollider : Component() {
         // Traverse all the cells in the collision layer
         for (tileY in 0 until collisionLayer.height) {
             for (tileX in 0 until collisionLayer.width) {
-                // If the current cell has not been explored
-                if (!isExplored(tileX, tileY, exploredTiles, collisionLayer)) {
-                    // Explore the cell and return a Rectangle if a contiguous collider is found
-                    val collider = explore(tileX, tileY, exploredTiles, collisionLayer)
-                    // If a collider is found, add it to the colliders list
-                    if (collider != null)
-                        colliderList.add(collider)
+                val gObj = GameObject()
+                gObj.transform.position.x = tileX * 16f
+                gObj.transform.position.y = tileY * 16f
+                gObj.attach<StaticBody>().apply {
+                    this.collider = PolygonShape().apply {
+                        setAsBox(100f, 1f)
+                    }
                 }
+
+                // If the current cell has not been explored
+//                if (!isExplored(tileX, tileY, exploredTiles, collisionLayer)) {
+//                    // Explore the cell and return a Rectangle if a contiguous collider is found
+//                    val collider = explore(tileX, tileY, exploredTiles, collisionLayer)
+//                    // If a collider is found, add it to the colliders list
+//                    if (collider != null)
+//                        colliderList.add(collider)
+//                }
             }
         }
 
         // For each collider in the colliders list
-        colliderList.forEach { collider ->
-            // Create a new game object
-            val gameObject = GameObject()
-            // Set its x and y position according to the collider
-            gameObject.transform.position.x = collider.x * 16f
-            gameObject.transform.position.y = collider.y * 16f
-            // Attach a BoxCollider to the game object and set its width and height
-            gameObject.attach<BoxCollider>().apply {
-                width = collider.width * 16f
-                height = collider.height * 16f
-                layer = tileLayer
-            }
-        }
+//        colliderList.forEach { col ->
+//            // Create a new game object
+//            val gameObject = GameObject()
+//            // Set its x and y position according to the collider
+//            gameObject.transform.position.x = col.x * 16f
+//            gameObject.transform.position.y = col.y * 16f
+//            // Attach a BoxCollider to the game object and set its width and height
+//            gameObject.attach<StaticBody>().apply {
+//                collider = PolygonShape().apply {
+//                    setAsBox(col.width/2, col.height/2)
+//                }
+//            }
+//        }
     }
 
     // Marks all tiles in the current row as explored

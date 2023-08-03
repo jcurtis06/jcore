@@ -28,5 +28,3 @@ eclipse.project.name = appName + "-core"
 dependencies {
     implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
 }
-
-

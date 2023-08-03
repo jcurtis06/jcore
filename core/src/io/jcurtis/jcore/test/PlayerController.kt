@@ -4,16 +4,16 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.graphics.Camera
-import io.jcurtis.jcore.gameobject.components.physics.RigidBody
+import io.jcurtis.jcore.gameobject.components.physics.DynamicBody
 
 class PlayerController : Component() {
     private var speed = 100
-    private var rigidbody: RigidBody? = null
+    private var rigidbody: DynamicBody? = null
 
     lateinit var camera: Camera
 
     override fun init() {
-        rigidbody = gameObject.getComponent<RigidBody>()
+        rigidbody = gameObject.getComponent<DynamicBody>()
         camera = Main.camera.getComponent<Camera>()!!
     }
 
@@ -22,19 +22,19 @@ class PlayerController : Component() {
         velocity.setZero()
 
         if (Gdx.input.isKeyPressed(Keys.D)) {
-            velocity.x += speed * delta
+            velocity.x += speed
         }
 
         if (Gdx.input.isKeyPressed(Keys.A)) {
-            velocity.x -= speed * delta
+            velocity.x -= speed
         }
 
         if (Gdx.input.isKeyPressed(Keys.W)) {
-            velocity.y += speed * delta
+            velocity.y += speed
         }
 
         if (Gdx.input.isKeyPressed(Keys.S)) {
-            velocity.y -= speed * delta
+            velocity.y -= speed
         }
 
         rigidbody?.moveAndSlide()

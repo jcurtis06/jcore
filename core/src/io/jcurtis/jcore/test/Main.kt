@@ -3,14 +3,15 @@ package io.jcurtis.jcore.test
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.physics.box2d.PolygonShape
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.core.JCoreGame
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.graphics.AnimationRenderer
 import io.jcurtis.jcore.gameobject.components.graphics.Camera
 import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
-import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
-import io.jcurtis.jcore.gameobject.components.physics.RigidBody
+import io.jcurtis.jcore.gameobject.components.physics.DynamicBody
+import io.jcurtis.jcore.gameobject.components.physics.StaticBody
 import io.jcurtis.jcore.gameobject.components.physics.TilemapCollider
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
@@ -54,13 +55,21 @@ object Main : JCoreGame() {
                 )
             )
         }
-        player.attach<BoxCollider>().apply {
-            width = 14f
-            height = 12f
+        player.attach<DynamicBody>().apply {
+            gravityScale = 0f
+            collider = PolygonShape().apply {
+                setAsBox(8f, 8f)
+            }
         }
-        player.attach<RigidBody>()
         player.getComponent<AnimationRenderer>()?.play("idle")
         player.getComponent<AnimationRenderer>()?.flipH = true
+
+        val ground = GameObject()
+        ground.attach<StaticBody>().apply {
+            collider = PolygonShape().apply {
+                setAsBox(100f, 1f)
+            }
+        }
 
         camera.attach<Camera>()
     }
