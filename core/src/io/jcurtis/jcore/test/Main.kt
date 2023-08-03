@@ -8,7 +8,6 @@ import io.jcurtis.jcore.core.JCoreGame
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.graphics.AnimationRenderer
 import io.jcurtis.jcore.gameobject.components.graphics.Camera
-import io.jcurtis.jcore.gameobject.components.graphics.SmoothedCamera
 import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
 import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
 import io.jcurtis.jcore.gameobject.components.physics.RigidBody
@@ -16,21 +15,18 @@ import io.jcurtis.jcore.gameobject.components.physics.TilemapCollider
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
 object Main : JCoreGame() {
-    val camera: GameObject = GameObject()
     private val player: GameObject = GameObject()
     private val map: GameObject = GameObject()
+    val camera: GameObject = GameObject()
 
     override fun init() {
-        showCollisionBoxes = true
+        showCollisionBoxes = false
         Core.assets.setLoader(TiledMap::class.java, TmxMapLoader())
         Core.assets.load("slime.png", Texture::class.java)
         Core.assets.load("player.png", Texture::class.java)
         Core.assets.load("badlogic.jpg", Texture::class.java)
         Core.assets.load("test.tmx", TiledMap::class.java)
         Core.assets.finishLoading()
-
-        camera.attach<Camera>()
-        camera.attach<SmoothedCamera>()
 
         map.attach<Tilemap>().apply {
             map = Core.assets.get("test.tmx", TiledMap::class.java)
@@ -65,5 +61,7 @@ object Main : JCoreGame() {
         player.attach<RigidBody>()
         player.getComponent<AnimationRenderer>()?.play("idle")
         player.getComponent<AnimationRenderer>()?.flipH = true
+
+        camera.attach<Camera>()
     }
 }
