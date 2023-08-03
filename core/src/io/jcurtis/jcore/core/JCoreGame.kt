@@ -13,21 +13,26 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import space.earlygrey.shapedrawer.ShapeDrawer
 
+/**
+ * The main class of the JCore library. Extend this class to create your game.
+ * Handles the creation of the game window, the game loop, and the rendering of the game.
+ */
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 open class JCoreGame : ApplicationAdapter() {
-    val resWidth = 320
-    val resHeight = 180
+    var resWidth = 320
+    var resHeight = 180
 
-    var batch: SpriteBatch? = null
-    var pixelPerfectBuffer: FrameBuffer? = null
+    private lateinit var batch: SpriteBatch
+    private lateinit var pixelPerfectBuffer: FrameBuffer
 
-    var viewCamera: OrthographicCamera? = null
-    var gameCamera = Core.currentCamera
-    var viewport: Viewport? = null
+    private lateinit var viewCamera: OrthographicCamera
+    private var gameCamera = Core.currentCamera
+    private lateinit var viewport: Viewport
 
     var showCollisionBoxes = false
     var showPositionPoints = false
 
-    var debugRenderer: ShapeDrawer? = null
+    private lateinit var debugRenderer: ShapeDrawer
 
     private var firstFrame = true
 
@@ -38,17 +43,16 @@ open class JCoreGame : ApplicationAdapter() {
         gameCamera.setToOrtho(false, resWidth.toFloat(), resHeight.toFloat())
 
         viewport = FitViewport(resWidth.toFloat(), resHeight.toFloat(), viewCamera)
-        viewport!!.apply()
+        viewport.apply()
 
         pixelPerfectBuffer = FrameBuffer(Pixmap.Format.RGB888, resWidth, resHeight, false)
-        pixelPerfectBuffer!!.colorBufferTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
+        pixelPerfectBuffer.colorBufferTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
 
         debugRenderer = ShapeDrawer(batch, TextureRegion(Texture(Gdx.files.internal("pixel.png"))))
 
         init()
 
         if (Core.objectsToAdd.isNotEmpty()) {
-            println("adding ${Core.objectsToAdd.size} objects")
             Core.objects.addAll(Core.objectsToAdd)
             Core.objectsToAdd.clear()
             Core.objects.forEach { it.init() }
@@ -68,7 +72,6 @@ open class JCoreGame : ApplicationAdapter() {
         }
 
         if (Core.objectsToAdd.isNotEmpty()) {
-            println("adding ${Core.objectsToAdd.size} objects")
             Core.objects.addAll(Core.objectsToAdd)
             Core.objectsToAdd.clear()
             Core.objects.forEach { it.init() }
@@ -81,67 +84,60 @@ open class JCoreGame : ApplicationAdapter() {
         gameCamera.update()
         Core.renderables.forEach { it.setView(gameCamera) }
 
-        pixelPerfectBuffer!!.begin()
+        pixelPerfectBuffer.begin()
 
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        batch!!.projectionMatrix = gameCamera.combined
-        batch!!.begin()
+        batch.projectionMatrix = gameCamera.combined
+        batch.begin()
 
-        Core.images.forEach { it.draw(batch!!) } // position is now rounded
-        Core.renderables.forEach { it.render(batch!!) }
+        Core.images.forEach { it.draw(batch) }
+        Core.renderables.forEach { it.render(batch) }
 
         if (showPositionPoints) {
             Core.objects.forEach {
-                debugRenderer!!.setColor(0f, 1f, 0f, 1f)
+                debugRenderer.setColor(0f, 1f, 0f, 1f)
 
-                debugRenderer!!.rectangle(
-                    it.transform.position.x,
-                    it.transform.position.y,
-                    1f,
-                    1f
+                debugRenderer.rectangle(
+                    it.transform.position.x, it.transform.position.y, 1f, 1f
                 )
             }
         }
 
         if (showCollisionBoxes) {
             Core.colliders.forEach {
-                debugRenderer!!.setColor(0f, 0f, 1f, 0.2f)
-                debugRenderer!!.rectangle(
+                debugRenderer.setColor(0f, 0f, 1f, 0.2f)
+                debugRenderer.rectangle(
                     it.rectangle
                 )
 
-                debugRenderer!!.setColor(1f, 0f, 0f, 0.5f)
-                debugRenderer!!.filledRectangle(
+                debugRenderer.setColor(1f, 0f, 0f, 0.5f)
+                debugRenderer.filledRectangle(
                     it.rectangle
                 )
             }
         }
 
-        batch!!.end()
-        pixelPerfectBuffer!!.end()
+        batch.end()
+        pixelPerfectBuffer.end()
 
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        viewport!!.apply()
-        batch!!.projectionMatrix = viewCamera!!.combined
-        viewCamera!!.setToOrtho(false, resWidth.toFloat(), resHeight.toFloat())
+        viewport.apply()
+        batch.projectionMatrix = viewCamera.combined
+        viewCamera.setToOrtho(false, resWidth.toFloat(), resHeight.toFloat())
 
-        batch!!.begin()
-        batch!!.draw(
-            pixelPerfectBuffer!!.colorBufferTexture,
-            0f, 0f,
-            viewport!!.worldWidth, viewport!!.worldHeight,
-            0f, 0f,
-            1f, 1f
+        batch.begin()
+        batch.draw(
+            pixelPerfectBuffer.colorBufferTexture, 0f, 0f, viewport.worldWidth, viewport.worldHeight, 0f, 0f, 1f, 1f
         )
-        batch!!.end()
+        batch.end()
     }
 
     override fun resize(width: Int, height: Int) {
-        viewport!!.update(width, height)
-        viewCamera!!.update()
+        viewport.update(width, height)
+        viewCamera.update()
     }
 }

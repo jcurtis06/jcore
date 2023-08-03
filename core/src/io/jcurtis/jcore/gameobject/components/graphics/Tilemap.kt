@@ -9,6 +9,11 @@ import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.graphics.Renderable
 
+/**
+ * A component that renders a tilemap to the screen.
+ * @property map The tilemap to render. Must be loaded with the asset manager.
+ */
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class Tilemap : Component(), Renderable {
     var map: TiledMap = TiledMap()
         set(value) {
@@ -19,26 +24,28 @@ class Tilemap : Component(), Renderable {
 
     private var renderer: OrthogonalTiledMapRenderer = OrthogonalTiledMapRenderer(map)
 
+    /**
+     * Gets a specific object from a specific layer.
+     * @param layer The layer to get the object from.
+     * @param name The name of the object.
+     * @return The object, or null if it doesn't exist.
+     * @see MapObject
+     * @see getObjects
+     */
     fun getObject(layer: String, name: String): MapObject? {
         val objectLayer = map.layers[layer] ?: return null
-        return objectLayer.objects[name] ?: return null
+        return objectLayer.objects[name]
     }
 
+    /**
+     * Gets all the objects from a specific layer.
+     * @param layer The layer to get the objects from.
+     * @return A list of all the objects in the layer.
+     * @see MapObject
+     */
     fun getObjects(layer: String): List<MapObject> {
         val objectLayer = map.layers[layer] ?: return emptyList()
-        val objects = mutableListOf<MapObject>()
-        for (obj in objectLayer.objects) {
-            objects.add(obj)
-        }
-        return objects
-    }
-
-    override fun update(delta: Float) {
-        return
-    }
-
-    override fun init() {
-        return
+        return objectLayer.objects.map { it }
     }
 
     override fun render(batch: SpriteBatch) {
@@ -48,4 +55,8 @@ class Tilemap : Component(), Renderable {
     override fun setView(camera: OrthographicCamera) {
         renderer.setView(camera)
     }
+
+    override fun update(delta: Float) = Unit
+
+    override fun init() = Unit
 }
