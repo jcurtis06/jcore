@@ -89,7 +89,7 @@ open class JCoreGame : ApplicationAdapter() {
         batch!!.projectionMatrix = gameCamera.combined
         batch!!.begin()
 
-        Core.images.forEach { it.draw(batch!!) }
+        Core.images.forEach { it.draw(batch!!) } // position is now rounded
         Core.renderables.forEach { it.render(batch!!) }
 
         if (showPositionPoints) {

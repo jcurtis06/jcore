@@ -2,7 +2,9 @@ package io.jcurtis.jcore.test
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
+import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
+import io.jcurtis.jcore.gameobject.components.graphics.Camera
 import io.jcurtis.jcore.gameobject.components.physics.RigidBody
 import io.jcurtis.jcore.gameobject.components.graphics.SmoothedCamera
 
@@ -10,8 +12,11 @@ class PlayerController : Component() {
     private var speed = 100
     private var rigidbody: RigidBody? = null
 
+    lateinit var camera: Camera
+
     override fun init() {
         rigidbody = gameObject.getComponent<RigidBody>()
+        camera = Main.camera.getComponent<Camera>()!!
     }
 
     override fun update(delta: Float) {
@@ -35,7 +40,10 @@ class PlayerController : Component() {
         }
 
         rigidbody?.moveAndSlide()
-        Main.camera.getComponent<SmoothedCamera>()
-            ?.setTarget(transform.position.x.toInt(), transform.position.y.toInt())
+        //Core.currentCamera.position.set(transform.position.x, transform.position.y, 0f)
+        camera.smoothingEnabled = true
+        camera.setCenterSmooth(transform.position)
+        println("Player position: ${transform.position}")
+        println("Camera position: ${Main.gameCamera.position}")
     }
 }
