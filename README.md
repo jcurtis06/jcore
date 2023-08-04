@@ -30,3 +30,9 @@ dependencies {
 ```
 
 _Make sure to use the latest version of jcore_
+
+## Credits
+- [Jonathan Curtis (jcurtis06)](https://www.github.com/jcurtis06) - Creator
+- [Eli Bradshaw (RidgeRider)](https://www.github.com/RidgeRider) - Large contributor
+- [JitPack](https://jitpack.io) - Dependency management
+- [Box2D](https://box2d.org) - Physics engine
