@@ -9,9 +9,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.graphics.Image
-import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
 import io.jcurtis.jcore.graphics.Renderable
-import io.jcurtis.jcore.test.Main
+
 object Core {
     var objects = mutableListOf<GameObject>()
     var objectsToAdd = mutableListOf<GameObject>()

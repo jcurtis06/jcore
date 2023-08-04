@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.graphics.AnimationRenderer
-import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
-import io.jcurtis.jcore.gameobject.components.physics.RigidBody
+import io.jcurtis.jcore.gameobject.components.physics.BoxShape
+import io.jcurtis.jcore.gameobject.components.physics.DynamicBody
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
 class Player {
@@ -42,11 +42,11 @@ class Player {
                 )
             )
         }
-        obj.attach<BoxCollider>().apply {
-            width = 14f
-            height = 12f
+        obj.attach<BoxShape>().apply {
+            width = 14
+            height = 12
         }
-        obj.attach<RigidBody>()
+        obj.attach<DynamicBody>()
 
         obj.getComponent<AnimationRenderer>()?.play("idle")
         obj.getComponent<AnimationRenderer>()?.flipH = true
