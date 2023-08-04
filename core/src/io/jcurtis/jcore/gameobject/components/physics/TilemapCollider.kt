@@ -1,8 +1,18 @@
 package io.jcurtis.jcore.gameobject.components.physics
 
+import com.badlogic.gdx.maps.MapLayer
+import com.badlogic.gdx.maps.MapObjects
+import com.badlogic.gdx.maps.objects.PolygonMapObject
+import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.maps.objects.TextureMapObject
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer
-import com.badlogic.gdx.math.Rectangle
-import io.jcurtis.jcore.gameobject.GameObject
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Body
+import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.physics.box2d.PolygonShape
+import com.badlogic.gdx.physics.box2d.Shape
+import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
 
@@ -15,6 +25,7 @@ class TilemapCollider : Component() {
 
     var tileLayer = 0
     var collisionTag = "collision"
+    var tileSize = 16f
 
     override fun init() {
         try {
@@ -25,103 +36,76 @@ class TilemapCollider : Component() {
     }
 
     override fun postInit() {
+        buildShapes()
+    }
+
+    private fun buildShapes() {
         // Try to retrieve the collision layer from the tilemap, if it doesn't exist, throw an exception
-        val collisionLayer = tilemap.map.layers.get(collisionTag) as TiledMapTileLayer?
+        val collisionLayer = tilemap.map.layers[collisionTag]
             ?: throw Exception("TilemapCollider requires a collision layer")
 
-        // Create a 2D array (grid) to keep track of the tiles that have been explored
-        val exploredTiles = Array(collisionLayer.width) { BooleanArray(collisionLayer.height) }
+        val layer = collisionLayer as TiledMapTileLayer
 
-        // Create a list to store the rectangles (colliders) created from the collision layer
-        val colliderList = mutableListOf<Rectangle>()
+        // Loop through each cell in the collision layer
+        for (x in 0 until layer.width) {
+            for (y in 0 until layer.height) {
+                val cell = layer.getCell(x, y) ?: continue
+                if (cell.tile == null) continue
 
-        // Traverse all the cells in the collision layer
-        for (tileY in 0 until collisionLayer.height) {
-            for (tileX in 0 until collisionLayer.width) {
-                // If the current cell has not been explored
-                if (!isExplored(tileX, tileY, exploredTiles, collisionLayer)) {
-                    // Explore the cell and return a Rectangle if a contiguous collider is found
-                    val collider = explore(tileX, tileY, exploredTiles, collisionLayer)
-                    // If a collider is found, add it to the colliders list
-                    if (collider != null)
-                        colliderList.add(collider)
+                // Loop through the embedded objects in the cell
+                for (obj in cell.tile.objects) {
+                    val pos = Vector2(x*tileSize, y*tileSize)
+
+                    val shape: Shape = if (obj is RectangleMapObject) {
+                        getRectangle(obj, pos)
+                    } else if (obj is PolygonMapObject) {
+                        getPolygon(obj, pos)
+                    } else {
+                        continue
+                    }
+
+                    // Create a body for the shape
+                    val bd = BodyDef()
+                    bd.type = BodyDef.BodyType.StaticBody
+                    val body = Core.world.createBody(bd)
+                    body.createFixture(shape, 1.0f)
+                    shape.dispose()
+
                 }
             }
         }
-
-        // For each collider in the colliders list
-        colliderList.forEach { collider ->
-            // Create a new game object
-            val gameObject = GameObject()
-            // Set its x and y position according to the collider
-            gameObject.transform.position.x = collider.x * 16f
-            gameObject.transform.position.y = collider.y * 16f
-            // Attach a BoxCollider to the game object and set its width and height
-            gameObject.attach<BoxCollider>().apply {
-                width = collider.width * 16f
-                height = collider.height * 16f
-                layer = tileLayer
-            }
-        }
     }
 
-    // Marks all tiles in the current row as explored
-    private fun markRowAsExplored(startX: Int, y: Int, width: Int, explored: Array<BooleanArray>) {
-        for (i in 0 until width)
-            explored[startX + i][y] = true
+    private fun getRectangle(rectangleObject: RectangleMapObject, pos: Vector2): PolygonShape {
+        val rectangle = rectangleObject.rectangle
+        val polygon = PolygonShape()
+        val size = Vector2(
+            (pos.x + rectangle.width * 0.5f),
+            (pos.y + rectangle.height * 0.5f)
+        )
+
+        polygon.setAsBox(
+            rectangle.width * 0.5f,
+            rectangle.height * 0.5f,
+            size,
+            0.0f
+        )
+
+        return polygon
     }
 
-    // Explore tiles starting from a given position (x, y)
-    private fun explore(startX: Int, startY: Int, explored: Array<BooleanArray>, tl: TiledMapTileLayer): Rectangle? {
-        var currentX = startX
-        var currentY = startY
-        var currentWidth = 0
-        var currentHeight = 0
-        var definedWidth = 0
-        var isWidthDefined = false
+    private fun getPolygon(polygonObject: PolygonMapObject, pos: Vector2): PolygonShape {
+        val polygon = PolygonShape()
+        val vertices = polygonObject.polygon.transformedVertices
+        val worldVertices = FloatArray(vertices.size)
 
-        while (true) {
-            if (isExplored(currentX, currentY, explored, tl))
-                break
-
-            currentX++
-            currentWidth++
-
-            if ((isWidthDefined && currentWidth >= definedWidth) || isExplored(currentX, currentY, explored, tl)) {
-                if (isWidthDefined && currentWidth < definedWidth)
-                    break
-                if (!isWidthDefined) {
-                    isWidthDefined = true
-                    definedWidth = currentWidth
-                }
-                markRowAsExplored(startX, currentY, definedWidth, explored)
-
-                currentY++
-                currentHeight++
-                currentX = startX
-                currentWidth = 0
-            }
+        for (i in vertices.indices) {
+            worldVertices[i] = vertices[i] + pos.x
         }
 
-        return if (definedWidth == 0 || currentHeight == 0)
-            null
-        else
-            Rectangle(startX.toFloat(), startY.toFloat(), definedWidth.toFloat(), currentHeight.toFloat())
+        polygon.set(worldVertices)
+        return polygon
     }
-
-    private fun isExplored(x: Int, y: Int, explored: Array<BooleanArray>, tl: TiledMapTileLayer): Boolean {
-        return (
-                x < 0 || y < 0 || // Check if x or y is negative, i.e., out of bounds of the tilemap
-                        x >= tl.width || y >= tl.height || // Check if x or y is beyond the tilemap's width or height
-                        explored[x][y] || // Check if the tile at coordinates x, y has already been explored
-                        tl.getCell(x, y) == null || // Check if there is no cell at the given coordinates
-                        !tl.getCell(x, y).tile.properties.get(
-                            "collidable",
-                            Boolean::class.java
-                        ) // Check if the cell at the given coordinates is not collidable
-                )
-    }
-
 
     override fun update(delta: Float) = Unit
 }

@@ -18,7 +18,6 @@ class Camera : Component() {
      * Must be called every frame to follow a changing position.
      */
     fun setCenter(pos: Vector2) {
-        transform.position.set(pos)
         Core.currentCamera.position.set(pos.x, pos.y, 0f)
     }
 
@@ -28,7 +27,6 @@ class Camera : Component() {
      * @param smoothing The amount of smoothing to use. Higher values result in slower smoothing.
      */
     fun setCenterSmooth(pos: Vector2, smoothing: Int = 10) {
-        transform.position.set(pos)
         Core.currentCamera.position.x += (pos.x - Core.currentCamera.position.x) / smoothing
         Core.currentCamera.position.y += (pos.y - Core.currentCamera.position.y) / smoothing
     }

@@ -3,14 +3,17 @@ package io.jcurtis.jcore.test
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.PolygonShape
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.core.JCoreGame
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.graphics.AnimationRenderer
 import io.jcurtis.jcore.gameobject.components.graphics.Camera
 import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
-import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
-import io.jcurtis.jcore.gameobject.components.physics.RigidBody
+import io.jcurtis.jcore.gameobject.components.physics.BoxShape
+import io.jcurtis.jcore.gameobject.components.physics.DynamicBody
+import io.jcurtis.jcore.gameobject.components.physics.StaticBody
 import io.jcurtis.jcore.gameobject.components.physics.TilemapCollider
 import io.jcurtis.platformer.graphics.AnimatedSpriteSheet
 
@@ -25,12 +28,13 @@ object Main : JCoreGame() {
         Core.assets.load("slime.png", Texture::class.java)
         Core.assets.load("player.png", Texture::class.java)
         Core.assets.load("badlogic.jpg", Texture::class.java)
-        Core.assets.load("test.tmx", TiledMap::class.java)
+        Core.assets.load("tilesets/world1.tmx", TiledMap::class.java)
         Core.assets.finishLoading()
 
         map.attach<Tilemap>().apply {
-            map = Core.assets.get("test.tmx", TiledMap::class.java)
-            getObject("objects", "player-spawn")?.let {
+            map = Core.assets.get("tilesets/world1.tmx", TiledMap::class.java)
+            getObject("points", "player-spawn")?.let {
+                println("found player spawn @ ${it.properties["x"]}, ${it.properties["y"]}")
                 val x = it.properties["x"] as Float
                 val y = it.properties["y"] as Float
                 player.transform.position.set(x, y)
@@ -54,11 +58,13 @@ object Main : JCoreGame() {
                 )
             )
         }
-        player.attach<BoxCollider>().apply {
-            width = 14f
-            height = 12f
+        player.attach<BoxShape>().apply {
+            width = 14
+            height = 10
         }
-        player.attach<RigidBody>()
+        player.attach<DynamicBody>().apply {
+            gravityScale = 0f
+        }
         player.getComponent<AnimationRenderer>()?.play("idle")
         player.getComponent<AnimationRenderer>()?.flipH = true
 

@@ -3,6 +3,7 @@ package io.jcurtis.jcore.core
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -15,10 +16,10 @@ object Core {
     var objects = mutableListOf<GameObject>()
     var objectsToAdd = mutableListOf<GameObject>()
 
-    var colliders = mutableListOf<BoxCollider>()
-
     var images = mutableListOf<Image>()
     var renderables = mutableListOf<Renderable>()
+
+    var world = World(Vector2(0f, 0f), true)
 
     // The current camera that the game is rendering with
     var currentCamera: OrthographicCamera = OrthographicCamera()

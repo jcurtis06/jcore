@@ -2,7 +2,6 @@ package io.jcurtis.jcore.gameobject
 
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
-import io.jcurtis.jcore.gameobject.components.physics.BoxCollider
 import io.jcurtis.jcore.gameobject.components.physics.Transform
 import io.jcurtis.jcore.graphics.Renderable
 
@@ -66,7 +65,6 @@ class GameObject {
         if (component is Transform) throw Exception("Cannot detach Transform")
 
         if (component is Renderable) Core.renderables.remove(component)
-        if (component is BoxCollider) Core.colliders.remove(component)
         components.remove(component)
     }
 
