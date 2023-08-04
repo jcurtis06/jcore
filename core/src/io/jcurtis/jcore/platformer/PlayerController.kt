@@ -1,4 +1,4 @@
-package io.jcurtis.jcore.test
+package io.jcurtis.jcore.platformer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
