@@ -10,7 +10,7 @@ class PlayerController : Component() {
     private var speed = 100
     private var rigidbody: DynamicBody? = null
 
-    lateinit var camera: Camera
+    private lateinit var camera: Camera
 
     override fun init() {
         rigidbody = gameObject.getComponent<DynamicBody>()
@@ -38,6 +38,7 @@ class PlayerController : Component() {
         }
 
         rigidbody?.moveAndSlide()
+
         camera.setCenterSmooth(transform.position)
     }
 }

@@ -17,8 +17,6 @@ object Core {
     var objects = mutableListOf<GameObject>()
     var objectsToAdd = mutableListOf<GameObject>()
 
-    var colliders = mutableListOf<Collider>()
-
     var images = mutableListOf<Image>()
     var renderables = mutableListOf<Renderable>()
 

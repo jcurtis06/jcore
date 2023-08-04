@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import space.earlygrey.shapedrawer.ShapeDrawer
+import kotlin.math.roundToInt
 
 /**
  * The main class of the JCore library. Extend this class to create your game.
@@ -93,6 +94,7 @@ open class JCoreGame : ApplicationAdapter() {
 
         Core.world.step(timeStep, velocityIterations, positionIterations);
 
+        gameCamera.position.set(gameCamera.position.x.roundToInt().toFloat(), gameCamera.position.y.roundToInt().toFloat(), 0f)
         gameCamera.update()
         Core.renderables.forEach { it.setView(gameCamera) }
 
@@ -106,16 +108,6 @@ open class JCoreGame : ApplicationAdapter() {
 
         Core.images.forEach { it.draw(batch) }
         Core.renderables.forEach { it.render(batch) }
-
-//        if (showPositionPoints) {
-//            Core.objects.forEach {
-//                debugRenderer.setColor(0f, 1f, 0f, 1f)
-//
-//                debugRenderer.rectangle(
-//                    it.transform.position.x, it.transform.position.y, 1f, 1f
-//                )
-//            }
-//        }
 
         batch.end()
         pixelPerfectBuffer.end()
@@ -133,7 +125,7 @@ open class JCoreGame : ApplicationAdapter() {
         )
         batch.end()
 
-//        box2dDebug.render(Core.world, gameCamera.combined)
+        box2dDebug.render(Core.world, gameCamera.combined)
     }
 
     override fun resize(width: Int, height: Int) {

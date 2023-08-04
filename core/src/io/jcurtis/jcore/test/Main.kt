@@ -3,6 +3,7 @@ package io.jcurtis.jcore.test
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.core.JCoreGame
@@ -26,12 +27,13 @@ object Main : JCoreGame() {
         Core.assets.load("slime.png", Texture::class.java)
         Core.assets.load("player.png", Texture::class.java)
         Core.assets.load("badlogic.jpg", Texture::class.java)
-        Core.assets.load("test.tmx", TiledMap::class.java)
+        Core.assets.load("tilesets/world1.tmx", TiledMap::class.java)
         Core.assets.finishLoading()
 
         map.attach<Tilemap>().apply {
-            map = Core.assets.get("test.tmx", TiledMap::class.java)
-            getObject("objects", "player-spawn")?.let {
+            map = Core.assets.get("tilesets/world1.tmx", TiledMap::class.java)
+            getObject("points", "player-spawn")?.let {
+                println("found player spawn @ ${it.properties["x"]}, ${it.properties["y"]}")
                 val x = it.properties["x"] as Float
                 val y = it.properties["y"] as Float
                 player.transform.position.set(x, y)
@@ -58,18 +60,14 @@ object Main : JCoreGame() {
         player.attach<DynamicBody>().apply {
             gravityScale = 0f
             collider = PolygonShape().apply {
-                setAsBox(8f, 8f)
+                setAsBox(7f, 5f, Vector2(
+                    14f/2,
+                    10f/2
+                ), 0f)
             }
         }
         player.getComponent<AnimationRenderer>()?.play("idle")
         player.getComponent<AnimationRenderer>()?.flipH = true
-
-        val ground = GameObject()
-        ground.attach<StaticBody>().apply {
-            collider = PolygonShape().apply {
-                setAsBox(100f, 1f)
-            }
-        }
 
         camera.attach<Camera>()
     }

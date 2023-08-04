@@ -4,11 +4,16 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
+import kotlin.math.roundToInt
 
 /**
  * A component that allows the game object to collide with other objects.
  * @property velocity The velocity of the game object to be applied in [moveAndSlide].
- * @property collidingDirection The direction that the game object is colliding in.
+ * @property collider The shape of the collider.
+ * @property friction The friction of the collider.
+ * @property bounce The bounce of the collider.
+ * @property density The density of the collider.
+ * @property gravityScale The gravity scale of the collider.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class DynamicBody() : Component() {
@@ -39,16 +44,10 @@ class DynamicBody() : Component() {
         collider.dispose()
     }
 
-    override fun update(delta: Float) {
-        transform.position = body.position
-
-        println(body.linearDamping)
-        println(body.angularDamping)
-    }
-
     fun moveAndSlide() {
-        // move our position based on our velocity
-        // move our rigidbody
         body.linearVelocity = velocity
+        transform.position.set(body.position.x.roundToInt().toFloat(), body.position.y.roundToInt().toFloat())
     }
+
+    override fun update(delta: Float) = Unit
 }
