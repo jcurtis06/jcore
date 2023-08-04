@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.World
 import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.graphics.Image
-import io.jcurtis.jcore.gameobject.components.physics.Collider
 import io.jcurtis.jcore.graphics.Renderable
 
 /**

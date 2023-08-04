@@ -11,6 +11,7 @@ import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.graphics.AnimationRenderer
 import io.jcurtis.jcore.gameobject.components.graphics.Camera
 import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
+import io.jcurtis.jcore.gameobject.components.physics.BoxShape
 import io.jcurtis.jcore.gameobject.components.physics.DynamicBody
 import io.jcurtis.jcore.gameobject.components.physics.StaticBody
 import io.jcurtis.jcore.gameobject.components.physics.TilemapCollider
@@ -57,14 +58,12 @@ object Main : JCoreGame() {
                 )
             )
         }
+        player.attach<BoxShape>().apply {
+            width = 14
+            height = 10
+        }
         player.attach<DynamicBody>().apply {
             gravityScale = 0f
-            collider = PolygonShape().apply {
-                setAsBox(7f, 5f, Vector2(
-                    14f/2,
-                    10f/2
-                ), 0f)
-            }
         }
         player.getComponent<AnimationRenderer>()?.play("idle")
         player.getComponent<AnimationRenderer>()?.flipH = true

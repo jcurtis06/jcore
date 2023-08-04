@@ -18,7 +18,6 @@ import kotlin.math.roundToInt
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class DynamicBody() : Component() {
     var velocity = Vector2()
-    var collider: Shape = PolygonShape()
     var friction = 0.0f
     var bounce = 0.0f
     var density = 0.0f
@@ -27,21 +26,30 @@ class DynamicBody() : Component() {
     lateinit var fixture: FixtureDef
     lateinit var body: Body
 
+    lateinit var collider: ShapeComponent
+
     override fun init() {
+        try {
+            // figure out what shape the collider is
+            collider = gameObject.getComponent<BoxShape>() ?: gameObject.getComponent<CircleShape>()!!
+        } catch (e: Exception) {
+            throw Exception("DynamicBody component requires a ShapeComponent.")
+        }
+
         val bodyDef = BodyDef()
         bodyDef.type = BodyDef.BodyType.DynamicBody
         bodyDef.position.set(transform.position)
         body = Core.world.createBody(bodyDef)
 
         fixture = FixtureDef()
-        fixture.shape = collider
+        fixture.shape = collider.getCollider()
         fixture.friction = friction
         fixture.restitution = bounce
         fixture.density = density
         body.createFixture(fixture)
 
 
-        collider.dispose()
+        collider.getCollider().dispose()
     }
 
     fun moveAndSlide() {

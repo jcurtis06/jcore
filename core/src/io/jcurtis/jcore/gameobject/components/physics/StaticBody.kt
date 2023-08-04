@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Shape
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
 
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class StaticBody : Component() {
     var collider = PolygonShape()
 
