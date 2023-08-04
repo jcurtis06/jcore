@@ -72,6 +72,7 @@ class AnimationRenderer : Component(), Renderable {
     }
 
     override fun render(batch: SpriteBatch) {
+        if (animation == null) return
         batch.draw(
             getCurrentFrame(),
             (transform.position.x + offset.x).roundToInt().toFloat(),
