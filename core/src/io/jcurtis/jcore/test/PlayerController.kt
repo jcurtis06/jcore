@@ -39,6 +39,6 @@ class PlayerController : Component() {
 
         rigidbody?.moveAndSlide()
 
-        camera.setCenterSmooth(transform.position)
+        camera.target.set(transform.position)
     }
 }

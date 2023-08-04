@@ -125,7 +125,7 @@ open class JCoreGame : ApplicationAdapter() {
         )
         batch.end()
 
-        box2dDebug.render(Core.world, gameCamera.combined)
+//        box2dDebug.render(Core.world, gameCamera.combined)
     }
 
     override fun resize(width: Int, height: Int) {

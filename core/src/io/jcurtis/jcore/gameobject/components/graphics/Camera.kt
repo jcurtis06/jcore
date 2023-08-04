@@ -1,6 +1,7 @@
 package io.jcurtis.jcore.gameobject.components.graphics
 
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import io.jcurtis.jcore.core.Core
 import io.jcurtis.jcore.gameobject.components.Component
 
@@ -12,26 +13,16 @@ import io.jcurtis.jcore.gameobject.components.Component
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class Camera : Component() {
     var isActive = true
-
-    /**
-     * Sets the center of the camera to the given position.
-     * Must be called every frame to follow a changing position.
-     */
-    fun setCenter(pos: Vector2) {
-        Core.currentCamera.position.set(pos.x, pos.y, 0f)
-    }
-
-    /**
-     * Sets the center of the camera to the given position, but smoothly.
-     * Must be called every frame to follow a changing position.
-     * @param smoothing The amount of smoothing to use. Higher values result in slower smoothing.
-     */
-    fun setCenterSmooth(pos: Vector2, smoothing: Int = 10) {
-        Core.currentCamera.position.x += (pos.x - Core.currentCamera.position.x) / smoothing
-        Core.currentCamera.position.y += (pos.y - Core.currentCamera.position.y) / smoothing
-    }
+    var smoothing = 0.1f
+    var target: Vector2 = Vector2()
 
     override fun init() = Unit
 
-    override fun update(delta: Float) = Unit
+    override fun update(delta: Float) {
+        if (isActive) {
+            val newPos = Core.currentCamera.position.lerp(Vector3(target, 0f), smoothing)
+
+            Core.currentCamera.position.set(newPos)
+        }
+    }
 }
