@@ -76,4 +76,15 @@ class GameObject {
     inline fun <reified T : Component> getComponent(): T? {
         return components.find { it is T } as T?
     }
+
+    /**
+     * Get a component from the GameObject.
+     * This method is less strict than [getComponent] and will return any component that is assignable
+     * from the type passed in. Whenever possible, use [getComponent] instead.
+     * @param T The class to search for.
+     */
+    inline fun <reified T : Any> getComponentLoosely(): T? {
+        // say "CollisionListener" is passed in, this will return all components that implement CollisionListener
+        return components.find { T::class.java.isAssignableFrom(it::class.java) } as T?
+    }
 }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.Shape
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.Component
 import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
 
@@ -20,7 +21,11 @@ import io.jcurtis.jcore.gameobject.components.graphics.Tilemap
  * Adds collisions to a [Tilemap] component
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class TilemapCollider : Component() {
+class TilemapCollider(
+    override var onEnter: (GameObject) -> Unit = {},
+    override var onExit: (GameObject) -> Unit = {},
+    override var onStay: (GameObject) -> Unit = {}
+) : Component(), CollisionListener {
     private lateinit var tilemap: Tilemap
 
     var tileLayer = 0
@@ -69,8 +74,8 @@ class TilemapCollider : Component() {
                     bd.type = BodyDef.BodyType.StaticBody
                     val body = Core.world.createBody(bd)
                     body.createFixture(shape, 1.0f)
+                    body.userData = gameObject
                     shape.dispose()
-
                 }
             }
         }
