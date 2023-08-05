@@ -28,6 +28,8 @@ class DynamicBody(
     var density = 0.0f
     var gravityScale = 0.0f
 
+    var collidedDirections = CollidedDirections()
+
     lateinit var fixture: FixtureDef
     lateinit var body: Body
 
@@ -64,3 +66,10 @@ class DynamicBody(
 
     override fun update(delta: Float) = Unit
 }
+
+data class CollidedDirections(
+    var up: Boolean = false,
+    var down: Boolean = false,
+    var left: Boolean = false,
+    var right: Boolean = false
+)
