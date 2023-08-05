@@ -6,10 +6,15 @@ import com.badlogic.gdx.physics.box2d.FixtureDef
 import com.badlogic.gdx.physics.box2d.PolygonShape
 import com.badlogic.gdx.physics.box2d.Shape
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.Component
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class StaticBody : Component() {
+class StaticBody(
+    override var onEnter: (GameObject) -> Unit = {},
+    override var onExit: (GameObject) -> Unit = {},
+    override var onStay: (GameObject) -> Unit = {}
+) : Component(), CollisionListener {
     var collider = PolygonShape()
 
     var friction = 0.0f
@@ -31,6 +36,7 @@ class StaticBody : Component() {
         fixture.restitution = bounce
         fixture.density = density
         body.createFixture(fixture)
+        body.userData = gameObject
 
         collider.dispose()
     }

@@ -3,6 +3,7 @@ package io.jcurtis.jcore.gameobject.components.physics
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.*
 import io.jcurtis.jcore.core.Core
+import io.jcurtis.jcore.gameobject.GameObject
 import io.jcurtis.jcore.gameobject.components.Component
 import kotlin.math.roundToInt
 
@@ -16,7 +17,11 @@ import kotlin.math.roundToInt
  * @property gravityScale The gravity scale of the collider.
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-class DynamicBody() : Component() {
+class DynamicBody(
+    override var onEnter: (GameObject) -> Unit = {},
+    override var onExit: (GameObject) -> Unit = {},
+    override var onStay: (GameObject) -> Unit = {}
+) : Component(), CollisionListener {
     var velocity = Vector2()
     var friction = 0.0f
     var bounce = 0.0f
@@ -30,7 +35,6 @@ class DynamicBody() : Component() {
 
     override fun init() {
         try {
-            // figure out what shape the collider is
             collider = gameObject.getComponent<BoxShape>() ?: gameObject.getComponent<CircleShape>()!!
         } catch (e: Exception) {
             throw Exception("DynamicBody component requires a ShapeComponent.")
@@ -48,6 +52,7 @@ class DynamicBody() : Component() {
         fixture.density = density
         body.createFixture(fixture)
 
+        body.userData = gameObject
 
         collider.getCollider().dispose()
     }

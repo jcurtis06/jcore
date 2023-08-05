@@ -18,7 +18,9 @@ object Core {
     var images = mutableListOf<Image>()
     var renderables = mutableListOf<Renderable>()
 
-    var world = World(Vector2(0f, 0f), true)
+    var world = World(Vector2(0f, 0f), true).apply {
+        setContactListener(ComponentContactForwarding())
+    }
 
     // The current camera that the game is rendering with
     var currentCamera: OrthographicCamera = OrthographicCamera()

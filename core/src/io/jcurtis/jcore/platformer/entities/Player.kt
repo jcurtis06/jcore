@@ -80,7 +80,14 @@ class Player {
             height = 16
         }
 
-        obj.attach<DynamicBody>()
+        obj.attach<DynamicBody>().apply {
+            onEnter = {
+            }
+            onStay = {
+            }
+            onExit = {
+            }
+        }
 
         obj.attach<PlayerController>()
     }
